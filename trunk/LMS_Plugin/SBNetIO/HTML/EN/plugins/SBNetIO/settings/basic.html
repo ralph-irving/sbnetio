@@ -15,6 +15,10 @@
 	[% WRAPPER settingSection %]
 	
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_GENERAL" %]  [% END %] 
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_GENERAL" desc="PLUGIN_SBNETIO_SRVADDRESS_DESC" %]
+			<input type="text" class="stdedit" name="srvAddress" id="srvAddress" value="[% prefs.srvAddress %]" size="20" />
+		[% END %]
 
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_SRVADDRESS" desc="PLUGIN_SBNETIO_SRVADDRESS_DESC" %]
 			<input type="text" class="stdedit" name="srvAddress" id="srvAddress" value="[% prefs.srvAddress %]" size="20" />
