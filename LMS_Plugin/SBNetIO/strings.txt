@@ -30,7 +30,7 @@ PLUGIN_SBNETIO_ENABLED_DESC
 PLUGIN_SBNETIO_HEADER_GENERAL
 	EN General Settings
 	DE Allgemeine Einstellungen
-	
+
 PLUGIN_SBNETIO_HEADER_ZONE1
 	EN Settings for Zone 1
 	DE Einstellungen fuer Zone 1
