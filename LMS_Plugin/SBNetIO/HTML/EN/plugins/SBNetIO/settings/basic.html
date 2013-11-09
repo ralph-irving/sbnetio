@@ -2,12 +2,18 @@
 
 	<input type="hidden" name="playername" value="[% playername %]">
 	<input type="hidden" name="mode" value="">
-
+	
 	[% WRAPPER settingSection %]
 
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ENABLED" desc="PLUGIN_SBNETIO_ENABLED_DESC" %] &nbsp;
 			<input name="pref_Enabled" type="checkbox" [% IF prefs.pref_Enabled %] checked ] [% END %] >
 		[% END %]
+		
+	[% END %]
+	
+	[% WRAPPER setting title="PLUGIN_SBNETIO_HEADER_GENERAL="" %][% END %]
+
+	[% WRAPPER settingSection %]
 
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_SRVADDRESS" desc="PLUGIN_SBNETIO_SRVADDRESS_DESC" %]
 			<input type="text" class="stdedit" name="srvAddress" id="srvAddress" value="[% prefs.srvAddress %]" size="20" />
@@ -17,18 +23,92 @@
 			<input type="text" class="stdedit" name="delayOn" id="delayOn" value="[% prefs.delayOn %]" size="5" />
 		[% END %]
 		
-		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ONMSG" desc="PLUGIN_SBNETIO_ONMSG_DESC" %]
-			<input type="text" class="stdedit" name="msgOn" id="msgOn" value="[% prefs.msgOn %]" size="5" />
-		[% END %]
-
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_OFFDELAY" desc="PLUGIN_SBNETIO_OFFDELAY_DESC" %]
 			<input type="text" class="stdedit" name="delayOff" id="delayOff" value="[% prefs.delayOff %]" size="5" />
 		[% END %]
 		
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_SBNETIO_HEADER_DUMMY="" %][% END %]	
+	[% WRAPPER setting title="PLUGIN_SBNETIO_HEADER_ZONE1" desc="" %][% END %]
+		
+	[% WRAPPER settingSection %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_NAME" desc="PLUGIN_SBNETIO_ZONE_NAME_DESC" %]
+			<input type="text" class="stdedit" name="pref_Zone1Name" id="Zone1Name" value="[% prefs.Zone1Name %]" size="20" />
+		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_AUTO" desc="PLUGIN_SBNETIO_ZONE_AUTO_DESC" %] &nbsp;
+			<input name="pref_Zone1Auto" type="checkbox" [% IF prefs.pref_Zone1Auto %] checked ] [% END %] >
+		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_UI" desc="PLUGIN_SBNETIO_ZONE_UI_DESC" %] &nbsp;
+			<input name="pref_Zone1UI" type="checkbox" [% IF prefs.pref_Zone1UI %] checked ] [% END %] >
+		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ONMSG" desc="PLUGIN_SBNETIO_ONMSG_DESC" %]
+			<input type="text" class="stdedit" name="msgOn1" id="msgOn1" value="[% prefs.msgOn1 %]" size="40" />
+		[% END %]
+	
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_OFFMSG" desc="PLUGIN_SBNETIO_OFFMSG_DESC" %]
-			<input type="text" class="stdedit" name="msgOff" id="msgOff" value="[% prefs.msgOff %]" size="5" />
+			<input type="text" class="stdedit" name="msgOff1" id="msgOff1" value="[% prefs.msgOff1 %]" size="40" />
+		[% END %]
+	
+	[% END %]
+
+	[% WRAPPER setting title="PLUGIN_SBNETIO_HEADER_DUMMY="" %][% END %]
+	[% WRAPPER setting title="PLUGIN_SBNETIO_HEADER_ZONE2" desc="" %][% END %]	
+	
+	[% WRAPPER settingSection %]
+
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_NAME" desc="PLUGIN_SBNETIO_ZONE_NAME_DESC" %]
+			<input type="text" class="stdedit" name="pref_Zone2Name" id="Zone1Name" value="[% prefs.Zone2Name %]" size="20" />
+		[% END %]
+	
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_AUTO" desc="PLUGIN_SBNETIO_ZONE_AUTO_DESC" %] &nbsp;
+			<input name="pref_Zone2Auto" type="checkbox" [% IF prefs.pref_Zone2Auto %] checked ] [% END %] >
 		[% END %]
 
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_UI" desc="PLUGIN_SBNETIO_ZONE_UI_DESC" %] &nbsp;
+			<input name="pref_Zone2UI" type="checkbox" [% IF prefs.pref_Zone2UI %] checked ] [% END %] >
+		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ONMSG" desc="PLUGIN_SBNETIO_ONMSG_DESC" %]
+			<input type="text" class="stdedit" name="msgOn2" id="msgOn2" value="[% prefs.msgOn2 %]" size="40" />
+		[% END %]
+	
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_OFFMSG" desc="PLUGIN_SBNETIO_OFFMSG_DESC" %]
+			<input type="text" class="stdedit" name="msgOff2" id="msgOff2" value="[% prefs.msgOff2 %]" size="40" />
+		[% END %]
+		
+	[% END %]	
+	
+	[% WRAPPER setting title="PLUGIN_SBNETIO_HEADER_DUMMY="" %][% END %]
+	[% WRAPPER setting title="PLUGIN_SBNETIO_HEADER_ZONE3" desc="" %][% END %]
+	
+	[% WRAPPER settingSection %]	
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_NAME" desc="PLUGIN_SBNETIO_ZONE_NAME_DESC" %]
+			<input type="text" class="stdedit" name="pref_Zone3Name" id="Zone3Name" value="[% prefs.Zone3Name %]" size="20" />
+		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_AUTO" desc="PLUGIN_SBNETIO_ZONE_AUTO_DESC" %] &nbsp;
+			<input name="pref_Zone3Auto" type="checkbox" [% IF prefs.pref_Zone3Auto %] checked ] [% END %] >
+		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_UI" desc="PLUGIN_SBNETIO_ZONE_UI_DESC" %] &nbsp;
+			<input name="pref_Zone3UI" type="checkbox" [% IF prefs.pref_Zone3UI %] checked ] [% END %] >
+		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ONMSG" desc="PLUGIN_SBNETIO_ONMSG_DESC" %]
+			<input type="text" class="stdedit" name="msgOn3" id="msgOn3" value="[% prefs.msgOn3 %]" size="40" />
+		[% END %]
+	
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_OFFMSG" desc="PLUGIN_SBNETIO_OFFMSG_DESC" %]
+			<input type="text" class="stdedit" name="msgOff3" id="msgOff3" value="[% prefs.msgOff3 %]" size="40" />
+		[% END %]
+
+		
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_SAVE" %] &nbsp;
 		[% END %]
 

@@ -2,7 +2,7 @@
 #
 #	Author:	Guenther Roll <guenther.roll(at)gmail(dot)com>
 #
-#   Credit to the authors of the DenonAvpControl-Plugin:
+#   Credit to the authors of the DenonAvpControl-Plugin which I used as template:
 #
 #           Chris Couper  <ccouper(at)fastkat(dot)com>
 #	        Felix Mueller <felix(dot)mueller(at)gwendesign(dot)com>
@@ -112,8 +112,8 @@ sub initPlugin {
 #	#        |  |  |  |Function to call
 #	#        C  Q  T  F
 #
-	Slim::Control::Request::addDispatch(['avpTop'],[1, 1, 0, \&avpTop]);
-	Slim::Control::Request::addDispatch(['avpSM'],[1, 1, 0, \&avpSM]);
+	Slim::Control::Request::addDispatch(['SBNetIO_TopMenu'],[1, 1, 0, \&SBNetIO_TopMenu]);
+#	Slim::Control::Request::addDispatch(['avpSM'],[1, 1, 0, \&avpSM]);
 #	Slim::Control::Request::addDispatch(['avpRmEq'],[1, 1, 0, \&avpRmEq]);
 #	Slim::Control::Request::addDispatch(['avpDynEq'],[1, 1, 0, \&avpDynEq]);
 #	Slim::Control::Request::addDispatch(['avpNM'],[1, 1, 0, \&avpNM]);
@@ -179,7 +179,7 @@ sub newPlayerCheck {
 				actions => {
 					go => {
 						player => 0,
-						cmd	 => [ 'avpTop' ],
+						cmd	 => [ 'SBNetIO_TopMenu' ],
 					}
 				}
 			});
@@ -441,8 +441,8 @@ sub usingSBNetIO() {
 # Handlers for player based menu integration
 # ----------------------------------------------------------------------------
 
-# Generates the top menus as elements of the Player Audio menu
-sub avpTop {
+# Generates the top menus as elements of the Extras menu
+sub SBNetIO_TopMenu {
 	my $request = shift;
 	my $client = $request->client();
 	my $cprefs = $prefs->client($client);
@@ -491,7 +491,12 @@ sub avpTop {
 	# };
 	
 	push @menu,	{
-		text => $client->string('PLUGIN_SBNETIO_SENDONMESSAGE'),
+		text => 'Zone 1',
+		id      => 'zone1',
+	};
+	
+	push @menu,	{
+		text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
 		id      => 'turnon',
 		icon => $IconOn,
 		nextWindow => "refresh",
@@ -505,7 +510,7 @@ sub avpTop {
 	};
 	
 	push @menu,	{
-		text => $client->string('PLUGIN_SBNETIO_SENDOFFMESSAGE'),
+		text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
 		id      => 'turnoff',
 		icon => $IconOff,
 		nextWindow => "refresh",
@@ -602,7 +607,7 @@ sub avpSetSM { # used to set the AVP surround mode
 	# }
 	$request->setStatusDone();
 	
-	#Slim::Control::Request::executeRequest( $client, [ 'avpTop' ] ); 
+	#Slim::Control::Request::executeRequest( $client, [ 'SBNetIO_TopMenu' ] ); 
 }
 
 
