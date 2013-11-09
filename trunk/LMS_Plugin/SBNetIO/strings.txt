@@ -28,20 +28,20 @@ PLUGIN_SBNETIO_ENABLED_DESC
 	DE	Wenn Sie möchten, dass Netzwerknachrichten versendet werden, wenn die Squeezebox ein- bzw. ausgeschaltet wird, aktivieren Sie dieses Feld.
 
 PLUGIN_SBNETIO_HEADER_GENERAL
-	EN General Settings
-	DE Allgemeine Einstellungen
+	EN	General Settings
+	DE	Allgemeine Einstellungen
 
 PLUGIN_SBNETIO_HEADER_ZONE1
-	EN Settings for Zone 1
-	DE Einstellungen fuer Zone 1
-	
+	EN	Settings for Zone 1
+	DE	Einstellungen fuer Zone 1
+
 PLUGIN_SBNETIO_HEADER_ZONE2
-	EN ZONE 2
-	DE ZONE 2
-	
+	EN	Settings for Zone 2
+	DE	Einstellungen fuer Zone 2
+
 PLUGIN_SBNETIO_HEADER_ZONE3
-	EN ZONE 3
-	DE ZONE 3
+	EN	Settings for Zone 3
+	DE	Einstellungen fuer Zone 3
 
 PLUGIN_SBNETIO_SRVADDRESS
 	EN	Server IP Address
@@ -86,11 +86,11 @@ PLUGIN_SBNETIO_ONMSG_DESC
 PLUGIN_SBNETIO_ZONE_NAME
 	EN	Name of the Zone
 	DE	Name der Zone
-	
+
 PLUGIN_SBNETIO_ZONE_NAME_DESC
 	EN	This name will be shown in controller UI.
 	DE	Mit diesem Namen wird die Zone im Controller angezeigt.
-	
+
 PLUGIN_SBNETIO_ZONE_AUTO
 	EN	Switch automatically
 	DE	Automatisch schalten
@@ -98,19 +98,21 @@ PLUGIN_SBNETIO_ZONE_AUTO
 PLUGIN_SBNETIO_ZONE_AUTO_DESC
 	EN	Switch zone automatically based on player activity.
 	DE	Zone je nach Playeraktivitaet automatisch schalten.
-	
+
 PLUGIN_SBNETIO_ZONE_UI
 	EN	Show Zone
 	DE	Zone anzeigen
-	
+
 PLUGIN_SBNETIO_ZONE_UI_DESC
 	EN	Show Zone in Controller UI to allow manual switching.
 	DE	Zone im Controller anzeigen, um manuelles Schalten zu ermoeglichen.
-		
+
 PLUGIN_SBNETIO_TURNONTITLE
 	EN	Turn on
 	DE	Einschalten
-	
+
 PLUGIN_SBNETIO_TURNOFFTITLE
 	EN	Turn off
 	DE	Ausschalten
+
+
