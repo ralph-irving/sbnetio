@@ -9,15 +9,15 @@ PLUGIN_SBNETIO_MODULE_NAME
 
 PLUGIN_SBNETIO_DESCRIPTION
 	EN	This plugin will send network messages to a home automation server on player power on/off.
-	DE	Dieses Plugin sendet Netzwerk Nachrichten zu einem Home Automation Server, wenn sich der Einschaltzustand des Players ändert.
+	DE	Dieses Plugin sendet Netzwerk Nachrichten zu einem Home Automation Server, wenn sich der Einschaltzustand des Players aendert.
 
 PLUGIN_SBNETIO_BASIC_SETTINGS_HEADER
 	EN	Changes made here effect the functionality of the SBNetIO plugin.
-	DE	Änderungen hier betreffen die Funktionen des SBNetIO Plugins.
+	DE	Aenderungen hier betreffen die Funktionen des SBNetIO Plugins.
 
 PLUGIN_SBNETIO_SAVE
 	EN	You must restart the server for these changes to take effect.
-	DE	Die Änderungen werden erst nach einem Server-Neustart wirksam.
+	DE	Die Aenderungen werden erst nach einem Server-Neustart wirksam.
 	
 PLUGIN_SBNETIO_ENABLED
 	EN	Enable plugin?
@@ -31,21 +31,17 @@ PLUGIN_SBNETIO_HEADER_GENERAL
 	EN General Settings
 	DE Allgemeine Einstellungen
 	
-PLUGIN_SBNETIO_HEADER_DUMMY
-	EN        
-	DE         
-	
 PLUGIN_SBNETIO_HEADER_ZONE1
-	EN Zone 1:
-	DE Zone 1:
+	EN Zone 1
+	DE Zone 1
 	
 PLUGIN_SBNETIO_HEADER_ZONE2
-	EN Zone 2:
-	DE Zone 2:
+	EN Zone 2
+	DE Zone 2
 	
 PLUGIN_SBNETIO_HEADER_ZONE3
-	EN Zone 3:
-	DE Zone 3:
+	EN Zone 3
+	DE Zone 3
 
 PLUGIN_SBNETIO_SRVADDRESS
 	EN	Server IP Address
@@ -101,7 +97,7 @@ PLUGIN_SBNETIO_ZONE_AUTO
 	
 PLUGIN_SBNETIO_ZONE_AUTO_DESC
 	EN	Switch zone automatically based on player activity.
-	DE	Zone je nach Playeraktivität automatisch schalten.
+	DE	Zone je nach Playeraktivitaet automatisch schalten.
 	
 PLUGIN_SBNETIO_ZONE_UI
 	EN	Show Zone
@@ -109,7 +105,7 @@ PLUGIN_SBNETIO_ZONE_UI
 	
 PLUGIN_SBNETIO_ZONE_UI_DESC
 	EN	Show Zone in Controller UI to allow manual switching.
-	DE	Zone im Controller anzeigen, um manuelles Schalten zu ermöglichen.
+	DE	Zone im Controller anzeigen, um manuelles Schalten zu ermoeglichen.
 		
 PLUGIN_SBNETIO_TURNONTITLE
 	EN	Turn on
