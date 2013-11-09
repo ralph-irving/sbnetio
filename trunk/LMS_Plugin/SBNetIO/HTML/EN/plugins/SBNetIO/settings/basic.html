@@ -11,13 +11,10 @@
 		
 	[% END %]
 	
-	[% WRAPPER settingSection %] 
-		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_GENERAL" %] 
-			&nbsp;
-		[% END %] 
-	[% END %]
 
 	[% WRAPPER settingSection %]
+	
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_GENERAL" %]  [% END %] 
 
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_SRVADDRESS" desc="PLUGIN_SBNETIO_SRVADDRESS_DESC" %]
 			<input type="text" class="stdedit" name="srvAddress" id="srvAddress" value="[% prefs.srvAddress %]" size="20" />
@@ -34,10 +31,11 @@
 	[% END %]
 
 	[% WRAPPER setting title=" " %][% END %]	
-	[% WRAPPER settingSection %] [% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_ZONE1" %] [% END %] [% END %]
 		
 	[% WRAPPER settingSection %]
-		
+
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_ZONE1" %] [% END %]
+	
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_NAME" desc="PLUGIN_SBNETIO_ZONE_NAME_DESC" %]
 			<input type="text" class="stdedit" name="pref_Zone1Name" id="Zone1Name" value="[% prefs.Zone1Name %]" size="20" />
 		[% END %]
@@ -61,9 +59,10 @@
 	[% END %]
 
 	[% WRAPPER setting title=" " %][% END %]	
-	[% WRAPPER settingSection %] [% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_ZONE2" %] [% END %] [% END %]
-	
+		
 	[% WRAPPER settingSection %]
+	
+	    [% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_ZONE2" %] [% END %]
 
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_NAME" desc="PLUGIN_SBNETIO_ZONE_NAME_DESC" %]
 			<input type="text" class="stdedit" name="pref_Zone2Name" id="Zone1Name" value="[% prefs.Zone2Name %]" size="20" />
@@ -88,9 +87,10 @@
 	[% END %]	
 	
 	[% WRAPPER setting title=" " %][% END %]	
-	[% WRAPPER settingSection %] [% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_ZONE3" %] [% END %] [% END %]
 	
 	[% WRAPPER settingSection %]	
+	
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_ZONE3" %] [% END %]
 		
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_NAME" desc="PLUGIN_SBNETIO_ZONE_NAME_DESC" %]
 			<input type="text" class="stdedit" name="pref_Zone3Name" id="Zone3Name" value="[% prefs.Zone3Name %]" size="20" />
