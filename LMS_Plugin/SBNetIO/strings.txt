@@ -32,16 +32,16 @@ PLUGIN_SBNETIO_HEADER_GENERAL
 	DE Allgemeine Einstellungen
 	
 PLUGIN_SBNETIO_HEADER_ZONE1
-	EN Zone 1
-	DE Zone 1
+	EN Settings for Zone 1
+	DE Einstellungen fuer Zone 1
 	
 PLUGIN_SBNETIO_HEADER_ZONE2
-	EN Zone 2
-	DE Zone 2
+	EN ZONE 2
+	DE ZONE 2
 	
 PLUGIN_SBNETIO_HEADER_ZONE3
-	EN Zone 3
-	DE Zone 3
+	EN ZONE 3
+	DE ZONE 3
 
 PLUGIN_SBNETIO_SRVADDRESS
 	EN	Server IP Address
