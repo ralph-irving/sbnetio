@@ -1,0 +1,80 @@
+# Strings for SBNETIO
+PLUGIN_SBNETIO
+	EN	SBNetIO
+	DE	SBNetIO
+
+PLUGIN_SBNETIO_MODULE_NAME
+	EN	SBNetIO
+	DE	SBNetIO
+
+PLUGIN_SBNETIO_DESCRIPTION
+	EN	This plugin will send network messages to a home automation server on player power on/off.
+	DE	Dieses Plugin sendet Netzwerk Nachrichten zu einem Home Automation Server, wenn sich der Einschaltzustand des Players ändert.
+
+PLUGIN_SBNETIO_BASIC_SETTINGS_HEADER
+	EN	Changes made here effect the functionality of the SBNetIO plugin.
+	DE	Änderungen hier betreffen die Funktionen des SBNetIO Plugins.
+
+PLUGIN_SBNETIO_SAVE
+	EN	You must restart the server for these changes to take effect.
+	DE	Die Änderungen werden erst nach einem Server-Neustart wirksam.
+	
+PLUGIN_SBNETIO_ENABLED
+	EN	Enable plugin?
+	DE	Plugin verwenden?
+
+PLUGIN_SBNETIO_ENABLED_DESC
+	EN	If you wish to send network messages when the Squeezebox is turned on or off, enable this checkbox.
+	DE	Wenn Sie möchten, dass Netzwerknachrichten versendet werden, wenn die Squeezebox ein- bzw. ausgeschaltet wird, aktivieren Sie dieses Feld.
+
+PLUGIN_SBNETIO_SRVADDRESS
+	EN	Server IP Address
+	DE	Server IP-Adresse
+
+PLUGIN_SBNETIO_SRVADDRESS_DESC
+	EN	Enter the IP Address of the home automation server (xxx.xxx.xxx.xxx:Port).  Note: This plugin will only work for fixed IP addresses.
+	DE	Geben Sie die IP-Adresse des Home Automation Servers ein (xxx.xxx.xxx.xxx:Port). Achtung: Dieses Plugin funktioniert nur mit festen IP-Adressen.
+
+PLUGIN_SBNETIO_ONDELAY
+	EN	Turn on delay
+	DE	Einschaltverzögerung
+
+PLUGIN_SBNETIO_ONDELAY_DESC
+	EN	Enter the number of seconds you want to wait for after the Squeezebox is turned on before the turn on message is send.
+	DE	Geben Sie ein, wie viele Sekunden Sie nach dem Einschalten der Squeezebox warten wollen, bevor die Einschaltnachricht gesendet wird.
+	
+PLUGIN_SBNETIO_ONMSG
+	EN	Turn on message
+	DE	Einschaltnachricht
+
+PLUGIN_SBNETIO_ONMSG_DESC
+	EN	The message which is send to the server to signal the Squeezebox was turned on.
+	DE	Die Nachricht, die zum Server gesendet wird, um das Einschalten der Squeezebox zu signalisieren.
+
+PLUGIN_SBNETIO_OFFDELAY
+	EN	Turn off delay
+	DE	Ausschaltverzögerung
+
+PLUGIN_SBNETIO_OFFDELAY_DESC
+	EN	Enter the number of seconds you want to wait for after the Squeezebox is turned off before the turn off message is send.
+	DE	Geben Sie die Anzahl der Sekunden ein, die Sie nach dem Ausschalten der Squeezebox warten wollen, bevor Ausschaltnachricht gesendet wird.
+
+PLUGIN_SBNETIO_OFFMSG
+	EN	Turn off message
+	DE	Ausschaltnachricht
+
+PLUGIN_SBNETIO_OFFMSG_DESC
+	EN	The message which is send to the server to signal the Squeezebox was turned off.
+	DE	Die Nachricht, die zum Server gesendet wird, um das Ausschalten der Squeezebox zu signalisieren.
+	
+PLUGIN_SBNETIO_TOGGLESTATE
+	EN	Toggle On/Off-State
+	DE	Status umschalten
+	
+PLUGIN_SBNETIO_SENDONMESSAGE
+	EN	Turn on
+	DE	Einschalten
+	
+PLUGIN_SBNETIO_SENDOFFMESSAGE
+	EN	Turn off
+	DE	Ausschalten
