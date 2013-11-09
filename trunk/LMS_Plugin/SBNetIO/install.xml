@@ -1,0 +1,19 @@
+<?xml version="1.0"?> 
+ <extension>
+  	<name>PLUGIN_SBNETIO_MODULE_NAME</name> 
+  	<creator>Guenther Roll</creator> 
+  	<defaultState>enabled</defaultState> 
+  	<description>PLUGIN_SBNETIO_DESCRIPTION</description> 
+  	<email>guenther.roll@gmail.com</email> 
+  	<homepageURL>http://code.google.com/p/sbnetio/</homepageURL> 
+  	<id>6D8FF6EB-EC05-52FA-02AA-ACE56E922128</id> 
+	<icon>plugins/SBNetIO/html/images/icon.png</icon>
+  	<module>Plugins::SBNetIO::Plugin</module> 
+ 	<targetApplication>
+  		<id>SqueezeCenter</id> 
+  		<maxVersion>*</maxVersion> 
+  		<minVersion>7.0</minVersion> 
+  	</targetApplication>
+  	<type>2</type> 
+  	<version>0.5.0</version> 
+  </extension>
