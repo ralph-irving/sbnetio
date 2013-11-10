@@ -128,15 +128,15 @@ sub handler {
 	if ($prefs->client($client)->get('Zone3Active') == '') {
 		$prefs->client($client)->set('Zone3Active', 0);
 	}
-	if ($prefs->client($client)->get('Zone1Name') == '') {
-		$prefs->client($client)->set('Zone1Name', 'Zone 1');
-	}
-	if ($prefs->client($client)->get('Zone2Name') == '') {
-		$prefs->client($client)->set('Zone2Name', 'Zone 2');
-	}
-	if ($prefs->client($client)->get('Zone3Name') == '') {
-		$prefs->client($client)->set('Zone3Name', 'Zone 3');
-	}
+	# if ($prefs->client($client)->get('Zone1Name') == '') {
+		# $prefs->client($client)->set('Zone1Name', 'Zone 1');
+	# }
+	# if ($prefs->client($client)->get('Zone2Name') == '') {
+		# $prefs->client($client)->set('Zone2Name', 'Zone 2');
+	# }
+	# if ($prefs->client($client)->get('Zone3Name') == '') {
+		# $prefs->client($client)->set('Zone3Name', 'Zone 3');
+	# }
 
 	# When "Save" is pressed on the settings page, this function gets called.
 	if ($params->{'saveSettings'}) {
