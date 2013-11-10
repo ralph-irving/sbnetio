@@ -128,13 +128,13 @@ sub handler {
 	if ($prefs->client($client)->get('Zone3Active') == '') {
 		$prefs->client($client)->set('Zone3Active', 0);
 	}
-	if ($prefs->client($client)->get('Zone1Name') == '') {
+	if ($prefs->client($client)->get('Zone1Name') eq "") {
 		$prefs->client($client)->set('Zone1Name', 'Zone 1');
 	}
-	if ($prefs->client($client)->get('Zone2Name') == '') {
+	if ($prefs->client($client)->get('Zone2Name') eq "") {
 		$prefs->client($client)->set('Zone2Name', 'Zone 2');
 	}
-	if ($prefs->client($client)->get('Zone3Name') == '') {
+	if ($prefs->client($client)->get('Zone3Name') eq "") {
 		$prefs->client($client)->set('Zone3Name', 'Zone 3');
 	}
 
