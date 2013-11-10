@@ -8,8 +8,8 @@ PLUGIN_SBNETIO_MODULE_NAME
 	DE	SBNetIO
 
 PLUGIN_SBNETIO_DESCRIPTION
-	EN	This plugin will send network messages to a home automation server on player power on/off.
-	DE	Dieses Plugin sendet Netzwerk Nachrichten zu einem Home Automation Server, wenn sich der Einschaltzustand des Players aendert.
+	EN	This plugin sends commands to a home automation server on player power on/off.
+	DE	Dieses Plugin sendet Kommandos zu einem Home Automation Server, wenn sich der Einschaltzustand des Players aendert.
 
 PLUGIN_SBNETIO_BASIC_SETTINGS_HEADER
 	EN	Changes made here effect the functionality of the SBNetIO plugin.
@@ -56,32 +56,32 @@ PLUGIN_SBNETIO_ONDELAY
 	DE	Einschaltverzoegerung
 
 PLUGIN_SBNETIO_ONDELAY_DESC
-	EN	Enter the number of seconds you want to wait for after the Squeezebox is turned on before the turn on message is send.
-	DE	Geben Sie ein, wie viele Sekunden Sie nach dem Einschalten der Squeezebox warten wollen, bevor die Einschaltnachricht gesendet wird.
+	EN	Enter the number of seconds you want to wait for after the Squeezebox is turned on before the turn on command is sent.
+	DE	Geben Sie ein, wie viele Sekunden Sie nach dem Einschalten der Squeezebox warten wollen, bevor die Einschaltkommando gesendet wird.
 	
 PLUGIN_SBNETIO_OFFDELAY
 	EN	Turn off delay
 	DE	Ausschaltverzoegerung
 	
 PLUGIN_SBNETIO_OFFDELAY_DESC
-	EN	Enter the number of seconds you want to wait for after the Squeezebox is turned off before the turn off message is send.
-	DE	Geben Sie die Anzahl der Sekunden ein, die Sie nach dem Ausschalten der Squeezebox warten wollen, bevor Ausschaltnachricht gesendet wird.
+	EN	Enter the number of seconds you want to wait for after the Squeezebox is turned off before the turn off command is sent.
+	DE	Geben Sie die Anzahl der Sekunden ein, die Sie nach dem Ausschalten der Squeezebox warten wollen, bevor Ausschaltkommando gesendet wird.
 	
 PLUGIN_SBNETIO_OFFMSG
-	EN	Turn off message
-	DE	Ausschaltnachricht
+	EN	Turn off command
+	DE	Ausschaltkommando
 	
 PLUGIN_SBNETIO_OFFMSG_DESC
-	EN	The message which is send to the server to signal the Squeezebox was turned off.
-	DE	Die Nachricht, die zum Server gesendet wird, um das Ausschalten der Squeezebox zu signalisieren.	
+	EN	The command to turn off a zone.
+	DE	Das Kommando zum Ausschalten der Zone.	
 
 PLUGIN_SBNETIO_ONMSG
-	EN	Turn on message
-	DE	Einschaltnachricht
+	EN	Turn on command
+	DE	Einschaltkommando
 	
 PLUGIN_SBNETIO_ONMSG_DESC
-	EN	The message which is send to the server to signal the Squeezebox was turned on.
-	DE	Die Nachricht, die zum Server gesendet wird, um das Einschalten der Squeezebox zu signalisieren.
+	EN	The command to turn on a zone.
+	DE	Das Kommando zum Einschalten der Zone.
 
 PLUGIN_SBNETIO_ZONE_NAME
 	EN	Name of the Zone
@@ -99,13 +99,13 @@ PLUGIN_SBNETIO_ZONE_AUTO_DESC
 	EN	Switch zone automatically based on player activity.
 	DE	Zone je nach Playeraktivitaet automatisch schalten.
 
-PLUGIN_SBNETIO_ZONE_UI
-	EN	Show Zone
-	DE	Zone anzeigen
+PLUGIN_SBNETIO_ZONE_ACTIVE
+	EN	Activate Zone
+	DE	Zone verwenden
 
-PLUGIN_SBNETIO_ZONE_UI_DESC
-	EN	Show Zone in Controller UI to allow manual switching.
-	DE	Zone im Controller anzeigen, um manuelles Schalten zu ermoeglichen.
+PLUGIN_SBNETIO_ZONE_ACTIVE_DESC
+	EN	Up to 3 independent zones are supported. They can be activated separatetly.
+	DE	Bis zu 3 Zonen werden unterstuetzt. Sie koennen separat aktiviert werden. 
 
 PLUGIN_SBNETIO_TURNONTITLE
 	EN	Turn on

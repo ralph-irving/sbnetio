@@ -117,7 +117,25 @@ sub handler {
 		$prefs->client($client)->set('delayOn', '0');
 	} 
 	if ($prefs->client($client)->get('delayOff') == '') {
-		$prefs->client($client)->set('delayOff', '0');
+		$prefs->client($client)->set('delayOff', '30');
+	}
+	if ($prefs->client($client)->get('Zone1Active') == '') {
+		$prefs->client($client)->set('Zone1Active', 1);
+	}
+	if ($prefs->client($client)->get('Zone2Active') == '') {
+		$prefs->client($client)->set('Zone2Active', 0);
+	}
+	if ($prefs->client($client)->get('Zone3Active') == '') {
+		$prefs->client($client)->set('Zone3Active', 0);
+	}
+	if ($prefs->client($client)->get('Zone1Name') == '') {
+		$prefs->client($client)->set('Zone1Name', 'Zone 1');
+	}
+	if ($prefs->client($client)->get('Zone2Name') == '') {
+		$prefs->client($client)->set('Zone2Name', 'Zone 2');
+	}
+	if ($prefs->client($client)->get('Zone3Name') == '') {
+		$prefs->client($client)->set('Zone3Name', 'Zone 3');
 	}
 
 	# When "Save" is pressed on the settings page, this function gets called.
@@ -128,6 +146,8 @@ sub handler {
 		} else {
 			$prefs->client($client)->set('pref_Enabled', 0);
 		}
+		
+		# General settings --------------------------------------------------------------
 		if ($params->{'srvAddress'}) { #save the Server IP Address
 			my $srvAddress = $params->{'srvAddress'};
 			# get rid of leading spaces if any since one is always added.
@@ -149,12 +169,87 @@ sub handler {
 			#save the delay off time in the client prefs
 			$prefs->client($client)->set('delayOff', "$delayOff"); 
 		}
+		
+		# Zone 1 --------------------------------------------------------------
+		if ($params->{'Zone1Active'}){ 
+			$prefs->client($client)->set('Zone1Active', 1); 
+		} else {
+			$prefs->client($client)->set('Zone1Active', 0);
+		}
+		if ($params->{'Zone1Name'}) { 
+			my $ZoneName = $params->{'Zone1Name'};
+			$prefs->client($client)->set('Zone1Name', "$ZoneName"); 
+		}
+		if ($params->{'Zone1Auto'}){ 
+			$prefs->client($client)->set('Zone1Auto', 1); 
+		} else {
+			$prefs->client($client)->set('Zone1Auto', 0);
+		}
+		if ($params->{'msgOn1'}) { 
+			my $msgOn = $params->{'msgOn1'};
+			$prefs->client($client)->set('msgOn1', "$msgOn"); 
+		}
+		if ($params->{'msgOff1'}) { 
+			my $msgOff = $params->{'msgOff1'};
+			$prefs->client($client)->set('msgOff1', "$msgOff"); 
+		}
+		
+		
+		# Zone 2 --------------------------------------------------------------
+		if ($params->{'Zone2Active'}){ 
+			$prefs->client($client)->set('Zone2Active', 1); 
+		} else {
+			$prefs->client($client)->set('Zone2Active', 0);
+		}
+		if ($params->{'Zone2Name'}) { 
+			my $ZoneName = $params->{'Zone2Name'};
+			$prefs->client($client)->set('Zone2Name', "$ZoneName"); 
+		}
+		if ($params->{'Zone2Auto'}){ 
+			$prefs->client($client)->set('Zone2Auto', 1); 
+		} else {
+			$prefs->client($client)->set('Zone2Auto', 0);
+		}
+		if ($params->{'msgOn2'}) { 
+			my $msgOn = $params->{'msgOn2'};
+			$prefs->client($client)->set('msgOn2', "$msgOn"); 
+		}
+		if ($params->{'msgOff2'}) { 
+			my $msgOff = $params->{'msgOff2'};
+			$prefs->client($client)->set('msgOff2', "$msgOff"); 
+		}
+		
+		
+		# Zone 3 --------------------------------------------------------------
+		if ($params->{'Zone3Active'}){ 
+			$prefs->client($client)->set('Zone3Active', 1); 
+		} else {
+			$prefs->client($client)->set('Zone3Active', 0);
+		}
+		if ($params->{'Zone3Name'}) { 
+			my $ZoneName = $params->{'Zone3Name'};
+			$prefs->client($client)->set('Zone3Name', "$ZoneName"); 
+		}
+		if ($params->{'Zone3Auto'}){ 
+			$prefs->client($client)->set('Zone3Auto', 1); 
+		} else {
+			$prefs->client($client)->set('Zone3Auto', 0);
+		}
+		if ($params->{'msgOn3'}) { 
+			my $msgOn = $params->{'msgOn3'};
+			$prefs->client($client)->set('msgOn3', "$msgOn"); 
+		}
+		if ($params->{'msgOff3'}) { 
+			my $msgOff = $params->{'msgOff3'};
+			$prefs->client($client)->set('msgOff3', "$msgOff"); 
+		}
+	
 	}
 
 	# Puts the values on the webpage. 
 	#next line takes the stored plugin pref value and puts it on the web page
 	#set the enabled checkbox on the web page
-	if ($prefs->client($client)->get('pref_Enabled') == '1') {
+	if($prefs->client($client)->get('pref_Enabled') == '1') {
 		$params->{'prefs'}->{'pref_Enabled'} = 1; 
 	}
 
@@ -162,6 +257,58 @@ sub handler {
 	$params->{'prefs'}->{'srvAddress'} = $prefs->client($client)->get('srvAddress'); 
 	$params->{'prefs'}->{'delayOn'} = $prefs->client($client)->get('delayOn'); 
 	$params->{'prefs'}->{'delayOff'} = $prefs->client($client)->get('delayOff'); 
+	
+	#Zone 1
+	if( $prefs->client($client)->get('Zone1Active') == '1'){
+		$params->{'prefs'}->{'Zone1Active'} = 1;
+	}
+	else{
+		$params->{'prefs'}->{'Zone1Active'} = 0;
+	}
+	if( $prefs->client($client)->get('Zone1Auto') == '1'){
+		$params->{'prefs'}->{'Zone1Auto'} = 1;
+	}
+	else{
+		$params->{'prefs'}->{'Zone1Auto'} = 0;
+	}
+	$params->{'prefs'}->{'Zone1Name'} = $prefs->client($client)->get('Zone1Name'); 
+	$params->{'prefs'}->{'msgOn1'} = $prefs->client($client)->get('msgOn1'); 
+	$params->{'prefs'}->{'msgOff1'} = $prefs->client($client)->get('msgOff1'); 
+	
+	#Zone 2
+	if( $prefs->client($client)->get('Zone2Active') == '1'){
+		$params->{'prefs'}->{'Zone2Active'} = 1;
+	}	
+	else{
+		$params->{'prefs'}->{'Zone2Active'} = 0;
+	}
+	if( $prefs->client($client)->get('Zone2Auto') == '1'){
+		$params->{'prefs'}->{'Zone2Auto'} = 1;
+	}	
+	else{
+		$params->{'prefs'}->{'Zone2Auto'} = 0;
+	}	
+	$params->{'prefs'}->{'Zone2Name'} = $prefs->client($client)->get('Zone2Name'); 
+	$params->{'prefs'}->{'msgOn2'} = $prefs->client($client)->get('msgOn2'); 
+	$params->{'prefs'}->{'msgOff2'} = $prefs->client($client)->get('msgOff2'); 
+	
+	#Zone 3
+	if( $prefs->client($client)->get('Zone3Active') == '1'){
+		$params->{'prefs'}->{'Zone3Active'} = 1;
+	}
+	else{
+		$params->{'prefs'}->{'Zone3Active'} = 0;
+	}
+	if( $prefs->client($client)->get('Zone3Auto') == '1'){
+		$params->{'prefs'}->{'Zone3Auto'} = 1;
+	}	
+	else{
+		$params->{'prefs'}->{'Zone3Auto'} = 0;
+	}
+	$params->{'prefs'}->{'Zone3Name'} = $prefs->client($client)->get('Zone3Name'); 
+	$params->{'prefs'}->{'msgOn3'} = $prefs->client($client)->get('msgOn3'); 
+	$params->{'prefs'}->{'msgOff3'} = $prefs->client($client)->get('msgOff3'); 
+	
 	
 	return $class->SUPER::handler($client, $params);
 }
