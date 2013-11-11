@@ -465,6 +465,8 @@ sub SBNetIO_TopMenu {
 	
 	my $IconOn = 'plugins/SBNetIO/html/images/SBNetIO_NotOn.png';
 	my $IconOff = 'plugins/SBNetIO/html/images/SBNetIO_NotOff.png';
+	my $IconZone = 'plugins/SBNetIO/html/images/SBNetIO_Zones.png';
+	
 	if( $PState == 1){
 		$IconOn = 'plugins/SBNetIO/html/images/SBNetIO_On.png';
 	}
@@ -492,6 +494,7 @@ sub SBNetIO_TopMenu {
 	
 	push @menu,	{
 		text => 'Zone 1',
+		icon => $IconZone,
 		id      => 'zone1',
 	};
 	
