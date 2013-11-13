@@ -462,17 +462,37 @@ sub SBNetIO_TopMenu {
 	$log->debug("Adding the menu elements to the menu". "\n");
 	
 	my $PState = $PowerState{$client};
-	
-	my $IconOn = 'plugins/SBNetIO/html/images/SBNetIO_NotOn.png';
-	my $IconOff = 'plugins/SBNetIO/html/images/SBNetIO_NotOff.png';
-	my $IconZone = 'plugins/SBNetIO/html/images/SBNetIO_Zones.png';
-	
+	my $IconState = 'plugins/SBNetIO/html/images/SBNetIO_Unknown.png';
 	if( $PState == 1){
-		$IconOn = 'plugins/SBNetIO/html/images/SBNetIO_On.png';
+		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_On.png';
+	}
+	if( $PState == 0){
+		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Off.png';
+	}	
+	
+	my $IconOn  = 'plugins/SBNetIO/html/images/SBNetIO_TurnOn.png';
+	my $IconOff = 'plugins/SBNetIO/html/images/SBNetIO_TurnOff.png';
+
+	
+	my $Zone1Name = $cprefs->get('Zone1Name');
+    my $IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
+	my $Zone1Auto = $cprefs->get('Zone1Auto');
+	if( $Zone1Auto == 1){
+	   $IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_SyncedZone.png';
 	}
 	
-	if( $PState == 0){
-		$IconOff = 'plugins/SBNetIO/html/images/SBNetIO_Off.png';
+	my $Zone2Name = $cprefs->get('Zone2Name');
+	my $IconZone2 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
+	my $Zone2Auto = $cprefs->get('Zone2Auto');
+	if( $Zone2Auto == 1){
+	   $IconZone2 = 'plugins/SBNetIO/html/images/SBNetIO_SyncedZone.png';
+	}
+	
+	my $Zone3Name = $cprefs->get('Zone3Name');
+	my $IconZone3 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
+	my $Zone3Auto = $cprefs->get('Zone3Auto');
+	if( $Zone3Auto == 1){
+	   $IconZone3 = 'plugins/SBNetIO/html/images/SBNetIO_SyncedZone.png';
 	}
 	
 	my @menu = ();
@@ -493,14 +513,22 @@ sub SBNetIO_TopMenu {
 	# };
 	
 	push @menu,	{
-		text => 'Zone 1',
-		icon => $IconZone,
-		id      => 'zone1',
+		text => 'State',
+		icon => $IconState,
+		id      => 'State',
+	};
+	
+	# ZONE 1 ==============================================================================================
+	
+	push @menu,	{
+		text => $Zone1Name,
+		icon => $IconZone1,
+		id      => 'Zone1Name',
 	};
 	
 	push @menu,	{
 		text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
-		id      => 'turnon',
+		id      => 'turnon1',
 		icon => $IconOn,
 		nextWindow => "refresh",
 		onClick => "refreshMe",
@@ -514,7 +542,7 @@ sub SBNetIO_TopMenu {
 	
 	push @menu,	{
 		text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
-		id      => 'turnoff',
+		id      => 'turnoff1',
 		icon => $IconOff,
 		nextWindow => "refresh",
 		onClick => "refreshMe",
@@ -525,6 +553,83 @@ sub SBNetIO_TopMenu {
 			},
 		},
 	};
+	
+	
+	# ZONE 2 ==============================================================================================
+	
+	push @menu,	{
+		text => $Zone2Name,
+		icon => $IconZone2,
+		id      => 'Zone2Name',
+	};
+	
+	push @menu,	{
+		text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
+		id      => 'turnon2',
+		icon => $IconOn,
+		nextWindow => "refresh",
+		onClick => "refreshMe",
+		actions  => {
+			do  => {
+				player => 0,
+				cmd    => ['avpSetSM', 1],
+			},
+		},
+	};
+	
+	push @menu,	{
+		text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
+		id      => 'turnoff2',
+		icon => $IconOff,
+		nextWindow => "refresh",
+		onClick => "refreshMe",
+		actions  => {
+			do  => {
+				player => 0,
+				cmd    => ['avpSetSM', 0],
+			},
+		},
+	};
+	
+	
+	# ZONE 3 ==============================================================================================
+	
+	push @menu,	{
+		text => $Zone3Name,
+		icon => $IconZone3,
+		id      => 'Zone3Name',
+	};
+	
+	push @menu,	{
+		text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
+		id      => 'turnon3',
+		icon => $IconOn,
+		nextWindow => "refresh",
+		onClick => "refreshMe",
+		actions  => {
+			do  => {
+				player => 0,
+				cmd    => ['avpSetSM', 1],
+			},
+		},
+	};
+	
+	push @menu,	{
+		text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
+		id      => 'turnoff3',
+		icon => $IconOff,
+		nextWindow => "refresh",
+		onClick => "refreshMe",
+		actions  => {
+			do  => {
+				player => 0,
+				cmd    => ['avpSetSM', 0],
+			},
+		},
+	};
+	
+	
+	# =========================================================================================================
 		
 	my $numitems = scalar(@menu);
 	
