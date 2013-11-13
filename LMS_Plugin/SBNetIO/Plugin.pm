@@ -462,7 +462,7 @@ sub SBNetIO_TopMenu {
 	$log->debug("Adding the menu elements to the menu". "\n");
 	
 	my $PState = $PowerState{$client};
-	my $IconState = 'plugins/SBNetIO/html/images/SBNetIO_Unknown.png';
+	my $IconState = 'plugins/SBNetIO/html/images/SBNetIO_Unkn.png';
 	if( $PState == 1){
 		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_On.png';
 	}
