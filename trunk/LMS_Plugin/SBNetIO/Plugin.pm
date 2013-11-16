@@ -528,9 +528,9 @@ sub ShowTopMenuCB {
 		actions  => {
 			go  => {
 				player => 0,
-				cmd    => [ 'ShowZoneMenu', 1],
+				cmd    => [ 'ShowZoneMenuCB', 1],
 				params	=> {
-					menu => 'ShowZoneMenu',
+					menu => 'ShowZoneMenuCB',
 				},
 			},
 		},
@@ -545,9 +545,9 @@ sub ShowTopMenuCB {
 		actions  => {
 			go  => {
 				player => 0,
-				cmd    => [ 'ShowZoneMenu', 2],
+				cmd    => [ 'ShowZoneMenuCB', 2],
 				params	=> {
-					menu => 'ShowZoneMenu',
+					menu => 'ShowZoneMenuCB',
 				},
 			},
 		},
@@ -562,9 +562,9 @@ sub ShowTopMenuCB {
 		actions  => {
 			go  => {
 				player => 0,
-				cmd    => [ 'ShowZoneMenu', 3],
+				cmd    => [ 'ShowZoneMenuCB', 3],
 				params	=> {
-					menu => 'ShowZoneMenu',
+					menu => 'ShowZoneMenuCB',
 				},
 			},
 		},
