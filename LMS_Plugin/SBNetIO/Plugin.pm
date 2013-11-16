@@ -425,7 +425,7 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff1');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 1, Msg: " . $Cmd . "\n");
-		Plugins::SBNetIO::SBNetIOSendMsg::SendMsg($client, $srvAddress, $Cmd);
+		Plugins::SBNetIO::SBNetIOSendMsg::SendSock($client, $srvAddress, $Cmd);
 	}
 	
 	my $Zone2 = 2;
@@ -438,7 +438,7 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff2');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 2, Msg: " . $Cmd . "\n");
-		Plugins::SBNetIO::SBNetIOSendMsg::SendMsg($client, $srvAddress, $Cmd);
+		Plugins::SBNetIO::SBNetIOSendMsg::SendSock($client, $srvAddress, $Cmd);
 	}
 	
 	my $Zone3 = 4;
@@ -451,7 +451,7 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff3');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 3, Msg: " . $Cmd . "\n");
-		Plugins::SBNetIO::SBNetIOSendMsg::SendMsg($client, $srvAddress, $Cmd);
+		Plugins::SBNetIO::SBNetIOSendMsg::SendSock($client, $srvAddress, $Cmd);
 	}
 
 }
