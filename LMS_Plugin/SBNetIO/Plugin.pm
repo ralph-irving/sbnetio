@@ -521,7 +521,7 @@ sub ShowTopMenuCB {
 	push @menu,	{
 		text => $Zone1Name,
 		id      => 'Zone1',
-		menuIcon => $IconZone1,
+		Icon => $IconZone1,
 		actions  => {
 			go  => {
 				player => 0,
@@ -538,7 +538,7 @@ sub ShowTopMenuCB {
 	push @menu,	{
 		text => $Zone2Name,
 		id      => 'Zone2',
-		menuIcon => $IconZone2,
+		Icon => $IconZone2,
 		actions  => {
 			go  => {
 				player => 0,
@@ -555,7 +555,7 @@ sub ShowTopMenuCB {
 	push @menu,	{
 		text => $Zone3Name,
 		id      => 'Zone3',
-		menuIcon => $IconZone3,
+		Icon => $IconZone3,
 		actions  => {
 			go  => {
 				player => 0,
