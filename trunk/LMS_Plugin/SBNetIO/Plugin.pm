@@ -578,6 +578,9 @@ sub ShowTopMenuCB {
 	# =========================================================================================================
 	
 	if( $AnyActiveZone ){
+		my $IconOn  = 'plugins/SBNetIO/html/images/SBNetIO_TurnOn.png';
+	    my $IconOff = 'plugins/SBNetIO/html/images/SBNetIO_TurnOff.png';
+	
 		push @menu,	{
 			text => ' ',
 			id      => 'Empty',
