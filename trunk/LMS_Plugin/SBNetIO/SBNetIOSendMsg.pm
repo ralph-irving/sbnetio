@@ -98,7 +98,7 @@ sub SendSock{
 	
 	#print $sock $request;
 	$sock->send('RCSend 11111 4 1\n');
-	$socket->close();
+	$sock->close();
 }
 
 
