@@ -413,7 +413,7 @@ sub SetZonePower{
 	$log->debug("*** SBNetIO: SetZonePower: " . $iZone . " - " . $iPower . "\n");
 	
 	my $cprefs = $prefs->client($client);
-	my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
+	my $srvAddress = $cprefs->get('srvAddress');
 	
 	my $Zone1 = 1;
 	if( ($iZone & $Zone1) == $Zone1 ){
