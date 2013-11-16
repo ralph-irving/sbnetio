@@ -415,7 +415,8 @@ sub SetZonePower{
 	my $cprefs = $prefs->client($client);
 	my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
 	
-	if( ($iZone & 1) == 1 ){
+	my $Zone1 = 1;
+	if( ($iZone & $Zone1) == $Zone1 ){
 		my $Cmd = '';
 		if( $iPower == 1 ){
 			$Cmd = $cprefs->get('msgOn1');
@@ -423,10 +424,12 @@ sub SetZonePower{
 		else{
 			$Cmd = $cprefs->get('msgOff1');
 		}
+		$log->debug("*** SBNetIO: SetZonePower: 1 \n");
 		Plugins::SBNetIO::SBNetIOSendMsg::SendMsg($client, $srvAddress, $Cmd);
 	}
 	
-	if( ($iZone & 2) == 2 ){
+	my $Zone2 = 2;
+	if( ($iZone & $Zone2) == $Zone2 ){
 		my $Cmd = '';
 		if( $iPower == 1 ){
 			$Cmd = $cprefs->get('msgOn2');
@@ -434,10 +437,12 @@ sub SetZonePower{
 		else{
 			$Cmd = $cprefs->get('msgOff2');
 		}
+		$log->debug("*** SBNetIO: SetZonePower: 2 \n");
 		Plugins::SBNetIO::SBNetIOSendMsg::SendMsg($client, $srvAddress, $Cmd);
 	}
 	
-	if( ($iZone & 4) == 4 ){
+	my $Zone3 = 4;
+	if( ($iZone & $Zone3) == $Zone3 ){
 		my $Cmd = '';
 		if( $iPower == 1 ){
 			$Cmd = $cprefs->get('msgOn3');
@@ -445,6 +450,7 @@ sub SetZonePower{
 		else{
 			$Cmd = $cprefs->get('msgOff3');
 		}
+		$log->debug("*** SBNetIO: SetZonePower: 3 \n");
 		Plugins::SBNetIO::SBNetIOSendMsg::SendMsg($client, $srvAddress, $Cmd);
 	}
 
