@@ -462,7 +462,7 @@ sub ShowTopMenuCB {
 	}
 	
 	$gMenuUpdate = 0;
-	$log->debug("Adding the menu elements to the menu". "\n");
+	$log->debug("Adding the menu elements to the Top menu". "\n");
 	
 	my $PState = $PowerState{$client};
 	my $TextState = 'Unknown';
@@ -498,21 +498,6 @@ sub ShowTopMenuCB {
 	}
 	
 	my @menu = ();
-	# push @menu,	{
-		# text => $client->string('PLUGIN_SBNETIO_TOGGLESTATE'),
-		# id      => 'togglestate',
-		# checkbox => $check,
-		# actions  => {
-			# on  => {
-				# player => 0,
-                # cmd    => ['SetPowerStateCB', 1],
-            # },
-            # off => {
-                # player => 0,
-                # cmd    => ['SetPowerStateCB', 0],
-			# },
-		# },
-	# };
 	
 	push @menu,	{
 		text => $TextState,
@@ -597,6 +582,8 @@ sub ShowZoneMenuCB {
 	
 	my $IconOn  = 'plugins/SBNetIO/html/images/SBNetIO_TurnOn.png';
 	my $IconOff = 'plugins/SBNetIO/html/images/SBNetIO_TurnOff.png';
+	
+	$log->debug("Adding the menu elements to the Zone menu". "\n");
 
 	my @menu = ();
 	
@@ -650,7 +637,7 @@ sub SetPowerStateCB {
 
 	my $RequestedPowerState = $request->getParam('_Powerstate');
 	
-	$log->debug("--> SetPowerstate: " . $RequestedPowerState . "\n");
+	$log->debug("--> SetPowerstateCB: " . $RequestedPowerState . "\n");
 	
 	SetPowerState($client, $RequestedPowerState);
 	
@@ -665,9 +652,9 @@ sub SetZonePowerCB {
 	my $cprefs = $prefs->client($client);
 
 	my $Zone = $request->getParam('_Zone');
-	my $Power = $request->getParam('_PowerState');
+	my $Power = $request->getParam('_Powerstate');
 	
-	$log->debug("--> SetZonePower: " . $Zone . " - " . $Power ."\n");
+	$log->debug("--> SetZonePowerCB: " . $Zone . " - " . $Power ."\n");
 	
 	SetZonePower($client, $Zone, $Power);
 	
@@ -675,6 +662,7 @@ sub SetZonePowerCB {
 }
 
 
+# ----------------------------------------------------------------------------
 sub RunCommand{
     # Send a command to SC
     # eg. scCommand( $client, ['display', 'Xxx', 'Yyy', '30'] );
