@@ -637,7 +637,7 @@ sub ShowTopMenuCB {
 				# cmd    => ['SetPowerStateCB', 1],
 			# },
 		# },
-	};
+	# };
 	
 	# push @menu,	{
 		# text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
