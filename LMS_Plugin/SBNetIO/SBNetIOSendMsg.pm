@@ -35,7 +35,7 @@ use Socket qw(:crlf);
 
 # ----------------------------------------------------------------------------
 my $log = Slim::Utils::Log->addLogCategory({
-	'category'     => 'plugin.sbnetio',
+	'category'     => 'plugin.SBNetIO',
 	'defaultLevel' => 'ERROR',
 	'description'  => 'PLUGIN_SBNETIO_MODULE_NAME',
 });
@@ -43,7 +43,7 @@ my $log = Slim::Utils::Log->addLogCategory({
 # ----------------------------------------------------------------------------
 # Global Variables
 # ----------------------------------------------------------------------------
-	my $prefs = preferences('plugin.sbnetio'); #name of preferences
+	my $prefs = preferences('plugin.SBNetIO'); #name of preferences
 	my $self;
 	my $gGetPSModes=0;	# looping through the PS modes
 
@@ -72,7 +72,7 @@ sub SendMsg{
 	
 	my $request = $Cmd . $CR;
 
-	$log->debug("Send msg: " . $Cmd . " to " .$url. "\n");	
+	$log->debug("Send msg: " . $Cmd . " to " . $url . "\n");	
 	
 	writemsg($request, $client, $url, $timeout);
 }
