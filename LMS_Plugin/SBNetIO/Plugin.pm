@@ -722,7 +722,7 @@ sub SetPowerStateCB {
 	
 	$log->debug("--> SetPowerstate: " . $RequestedPowerState . "\n");
 	
-	SetPowerState($client, $RequestedPowerState)
+	SetPowerState($client, $RequestedPowerState);
 	
 	$request->setStatusDone();
 }
@@ -739,7 +739,7 @@ sub SetZonePowerCB {
 	
 	$log->debug("--> SetZonePower: " . $Zone . " - " . $Power ."\n");
 	
-	SetZonePower($client, $Zone, $Power)
+	SetZonePower($client, $Zone, $Power);
 	
 	$request->setStatusDone();
 }
