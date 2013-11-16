@@ -64,37 +64,17 @@ sub new {
 
 
 # ----------------------------------------------------------------------------
-sub SendNetVolume{
+sub SendMsg{
 	my $client = shift;
 	my $url = shift;
-	my $vol = shift;
-	my $request = "Volume " .  $vol . $CR ;
-
-	$log->debug("Calling writemsg for volume command: $request");	
-	writemsg($request, $client, $url);
-}
-
-
-# ----------------------------------------------------------------------------
-sub SendNetPowerOn{
-	my $client = shift;
-	my $url = shift;
-	my $request = "PWON" . $CR;
+	my $Cmd = shift
 	my $timeout = 1;
-
-	$log->debug("Calling writemsg for Power On command");	
-	writemsg($request, $client, $url, $timeout);
-}
-
-
-# ----------------------------------------------------------------------------
-sub SendNetPowerOff{
-	my $client = shift;
-	my $url = shift;
-	my $request = "PWOFF" . $CR;
 	
-	$log->debug("Calling writemsg for Power Off command");
-	writemsg($request, $client, $url);
+	my $request = $Cmd . $CR;
+
+	$log->debug("Calling writemsg with msg: " . $Cmd . "\n");	
+	
+	#writemsg($request, $client, $url, $timeout);
 }
 
 
