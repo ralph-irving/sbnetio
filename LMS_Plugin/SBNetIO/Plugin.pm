@@ -2,7 +2,8 @@
 #
 #	Author:	Guenther Roll <guenther.roll(at)gmail(dot)com>
 #
-#   Credit to the authors of the DenonAvpControl-Plugin which I used as template:
+#   Credit to the authors of the DenonAvpControl-Plugin which I used as template and 
+#   which largely pointed me the way through the difficulties of Perl and the Plugin API:
 #
 #           Chris Couper  <ccouper(at)fastkat(dot)com>
 #	        Felix Mueller <felix(dot)mueller(at)gwendesign(dot)com>
@@ -100,18 +101,13 @@ sub initPlugin {
 	# init the SBNetIOSendMsg plugin
 	Plugins::SBNetIO::SBNetIOSendMsg->new( $classPlugin);
 
-#	# getexternalvolumeinfo
-#	$getexternalvolumeinfoCoderef = Slim::Control::Request::addDispatch(['getexternalvolumeinfo'],[0, 0, 0, \&getexternalvolumeinfoCLI]);
-#	$log->debug( "*** SBNetIO: getexternalvolumeinfoCoderef: ".$getexternalvolumeinfoCoderef."\n");
-#	# Register dispatch methods for Audio menu options
-#	$log->debug("Getting the menu requests". "\n");
-#	
-#	#        |requires Client
-#	#        |  |is a Query
-#	#        |  |  |has Tags
-#	#        |  |  |  |Function to call
-#	#        C  Q  T  F
-#
+	# Register dispatch methods
+	
+	#        |requires Client
+	#        |  |is a Query
+	#        |  |  |has Tags
+	#        |  |  |  |Function to call
+	#        C  Q  T  F
 	Slim::Control::Request::addDispatch(['ShowTopMenuCB'],[1, 1, 0, \&ShowTopMenuCB]);
 	Slim::Control::Request::addDispatch(['ShowZoneMenuCB', '_Zone'],[1, 1, 0, \&ShowZoneMenuCB]);
 	Slim::Control::Request::addDispatch(['SetPowerStateCB', '_Powerstate'],[1, 1, 0, \&SetPowerStateCB]);
@@ -463,7 +459,10 @@ sub ShowTopMenuCB {
 	
 	$gMenuUpdate = 0;
 	$log->debug("Adding the menu elements to the Top menu". "\n");
+		
+	my @menu = ();
 	
+	# State ==============================================================================================
 	my $PState = $PowerState{$client};
 	my $TextState = 'Unknown';
 	my $IconState = 'plugins/SBNetIO/html/images/SBNetIO_Unkn.png';
@@ -476,84 +475,90 @@ sub ShowTopMenuCB {
 		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Off.png';
 	}	
 	
-	my $Zone1Name = $cprefs->get('Zone1Name');
-    my $IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
-	my $Zone1Auto = $cprefs->get('Zone1Auto');
-	if( $Zone1Auto == 1){
-	   $IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_SyncedZone.png';
-	}
-	
-	my $Zone2Name = $cprefs->get('Zone2Name');
-	my $IconZone2 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
-	my $Zone2Auto = $cprefs->get('Zone2Auto');
-	if( $Zone2Auto == 1){
-	   $IconZone2 = 'plugins/SBNetIO/html/images/SBNetIO_SyncedZone.png';
-	}
-	
-	my $Zone3Name = $cprefs->get('Zone3Name');
-	my $IconZone3 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
-	my $Zone3Auto = $cprefs->get('Zone3Auto');
-	if( $Zone3Auto == 1){
-	   $IconZone3 = 'plugins/SBNetIO/html/images/SBNetIO_SyncedZone.png';
-	}
-	
-	my @menu = ();
-	
 	push @menu,	{
 		text => $TextState,
 		icon => $IconState,
 		id      => 'State',
 	};
 	
+	
 	# ZONE 1 ==============================================================================================
-	push @menu,	{
-		text => $Zone1Name,
-		id      => 'Zone1',
-		icon => $IconZone1,
-		actions  => {
-			go  => {
-				player => 0,
-				cmd    => [ 'ShowZoneMenuCB', 1],
-				params	=> {
-					menu => 'ShowZoneMenuCB',
+	my $Zone1Active = $cprefs->get('Zone1Active');
+	if( $Zone1Active == 1 ){
+		my $Zone1Name = $cprefs->get('Zone1Name');
+		
+		my $IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
+		my $Zone1Auto = $cprefs->get('Zone1Auto');
+		if( $Zone1Auto == 1){
+			$IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_SyncedZone.png';
+		}
+		push @menu,	{
+			text => $Zone1Name,
+			id      => 'Zone1',
+			icon => $IconZone1,
+			actions  => {
+				go  => {
+					player => 0,
+					cmd    => [ 'ShowZoneMenuCB', 1],
+					params	=> {
+						menu => 'ShowZoneMenuCB',
+					},
 				},
 			},
-		},
-	};
+		};
+	}
 	
 	
 	# ZONE 2 ==============================================================================================
-	push @menu,	{
-		text => $Zone2Name,
-		id      => 'Zone2',
-		icon => $IconZone2,
-		actions  => {
-			go  => {
-				player => 0,
-				cmd    => [ 'ShowZoneMenuCB', 2],
-				params	=> {
-					menu => 'ShowZoneMenuCB',
+	my $Zone2Active = $cprefs->get('Zone2Active');
+	if( $Zone2Active == 1 ){
+		my $Zone2Name = $cprefs->get('Zone2Name');
+		my $IconZone2 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
+		my $Zone2Auto = $cprefs->get('Zone2Auto');
+		if( $Zone2Auto == 1){
+			$IconZone2 = 'plugins/SBNetIO/html/images/SBNetIO_SyncedZone.png';
+		}
+		push @menu,	{
+			text => $Zone2Name,
+			id      => 'Zone2',
+			icon => $IconZone2,
+			actions  => {
+				go  => {
+					player => 0,
+					cmd    => [ 'ShowZoneMenuCB', 2],
+					params	=> {
+						menu => 'ShowZoneMenuCB',
+					},
 				},
 			},
-		},
-	};
+		};
+	}
 	
 	
 	# ZONE 3 ==============================================================================================
-	push @menu,	{
-		text => $Zone3Name,
-		id      => 'Zone3',
-		icon => $IconZone3,
-		actions  => {
-			go  => {
-				player => 0,
-				cmd    => [ 'ShowZoneMenuCB', 3],
-				params	=> {
-					menu => 'ShowZoneMenuCB',
+	my $Zone3Active = $cprefs->get('Zone3Active');
+	if( $Zone3Active == 1 ){
+		my $Zone3Name = $cprefs->get('Zone3Name');
+		my $IconZone3 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
+		my $Zone3Auto = $cprefs->get('Zone3Auto');
+		if( $Zone3Auto == 1){
+		   $IconZone3 = 'plugins/SBNetIO/html/images/SBNetIO_SyncedZone.png';
+		}
+		push @menu,	{
+			text => $Zone3Name,
+			id      => 'Zone3',
+			icon => $IconZone3,
+			actions  => {
+				go  => {
+					player => 0,
+					cmd    => [ 'ShowZoneMenuCB', 3],
+					params	=> {
+						menu => 'ShowZoneMenuCB',
+					},
 				},
 			},
-		},
-	};
+		};
+	}
 	
 	
 	# =========================================================================================================
@@ -583,7 +588,7 @@ sub ShowZoneMenuCB {
 	my $IconOn  = 'plugins/SBNetIO/html/images/SBNetIO_TurnOn.png';
 	my $IconOff = 'plugins/SBNetIO/html/images/SBNetIO_TurnOff.png';
 	
-	$log->debug("Adding the menu elements to the Zone menu". "\n");
+	$log->debug("Adding the menu elements for Zone " . $Zone ."\n");
 
 	my @menu = ();
 	
