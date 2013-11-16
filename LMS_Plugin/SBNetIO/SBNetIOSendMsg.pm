@@ -86,7 +86,7 @@ sub SendSock{
 	my $Cmd = shift;
 	my $timeout = 1;
 	
-	my $request = $Cmd . $CR . "Hallo" . $CR;
+	my $request = $Cmd . $CR . $CR;
 
 	$log->debug("Send Sock msg: " . $Cmd . " to " . $url . "\n");	
 	
