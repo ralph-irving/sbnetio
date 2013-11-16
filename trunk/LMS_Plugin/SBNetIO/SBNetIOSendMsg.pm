@@ -98,7 +98,7 @@ sub SendSock{
 	
 	$sock->autoflush(1);
 	$sock->send($request);
-	$sock->close();
+	#$sock->close();
 }
 
 
