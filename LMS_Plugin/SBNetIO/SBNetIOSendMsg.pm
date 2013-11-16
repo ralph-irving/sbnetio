@@ -72,7 +72,7 @@ sub SendMsg{
 	
 	my $request = $Cmd . $CR;
 
-	$log->debug("Calling writemsg with msg: " . $Cmd . "\n");	
+	$log->debug("Send msg: " . $Cmd . " to " .$url. "\n");	
 	
 	writemsg($request, $client, $url, $timeout);
 }
