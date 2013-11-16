@@ -112,19 +112,10 @@ sub initPlugin {
 #	#        |  |  |  |Function to call
 #	#        C  Q  T  F
 #
-	Slim::Control::Request::addDispatch(['SBNetIO_TopMenu'],[1, 1, 0, \&SBNetIO_TopMenu]);
-#	Slim::Control::Request::addDispatch(['avpSM'],[1, 1, 0, \&avpSM]);
-#	Slim::Control::Request::addDispatch(['avpRmEq'],[1, 1, 0, \&avpRmEq]);
-#	Slim::Control::Request::addDispatch(['avpDynEq'],[1, 1, 0, \&avpDynEq]);
-#	Slim::Control::Request::addDispatch(['avpNM'],[1, 1, 0, \&avpNM]);
-#	Slim::Control::Request::addDispatch(['avpRes'],[1, 1, 0, \&avpRes]);
-#	Slim::Control::Request::addDispatch(['avpRefLvl'],[1, 1, 0, \&avpRefLvl]);
-	Slim::Control::Request::addDispatch(['avpSetSM', '_powerstate'],[1, 1, 0, \&avpSetSM]);
-#	Slim::Control::Request::addDispatch(['avpSetRmEq', '_roomEq', '_oldRoomEq'],[1, 1, 0, \&avpSetRmEq]);
-#	Slim::Control::Request::addDispatch(['avpSetDynEq', '_dynamicEq', '_oldDynamicEq'],[1, 1, 0, \&avpSetDynEq]);
-#	Slim::Control::Request::addDispatch(['avpSetNM', '_nightMode', '_oldNightMode'],[1, 1, 0, \&avpSetNM]);
-#	Slim::Control::Request::addDispatch(['avpSetRes', '_restorer', '_oldRestorer'],[1, 1, 0, \&avpSetRes]);
-#	Slim::Control::Request::addDispatch(['avpSetRefLvl', '_refLevel', '_oldRefLevel'],[1, 1, 0, \&avpSetRefLvl]);
+	Slim::Control::Request::addDispatch(['ShowTopMenuCB'],[1, 1, 0, \&ShowTopMenuCB]);
+	Slim::Control::Request::addDispatch(['ShowZoneMenuCB', '_Zone'],[1, 1, 0, \&ShowZoneMenuCB]);
+	Slim::Control::Request::addDispatch(['SetPowerStateCB', '_Powerstate'],[1, 1, 0, \&SetPowerStateCB]);
+	Slim::Control::Request::addDispatch(['SetZonePowerCB', '_Zone', '_Powerstate'],[1, 1, 0, \&SetZonePowerCB]);
 }
 
 # ----------------------------------------------------------------------------
@@ -179,7 +170,7 @@ sub newPlayerCheck {
 				actions => {
 					go => {
 						player => 0,
-						cmd	 => [ 'SBNetIO_TopMenu' ],
+						cmd	 => [ 'ShowTopMenuCB' ],
 					}
 				}
 			});
@@ -372,40 +363,52 @@ sub RequestPowerOff {
 
 
 # ----------------------------------------------------------------------------
-sub TurnPowerOn {
+sub SetPowerState{
 	my $client = shift;
-	my $cprefs = $prefs->client($client);
-	my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
+	my $iPower = shift;
 	
-	#flag power state as ON
-	$PowerState{$client}   = 1;
-	
-	#flag end of transition
+	$PowerState{$client} = $iPower;
 	$InTransition{$client} = 0;
 	
-	$log->debug("*** SBNetIO: Turn Power ON \n");
-	Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress);
+	$log->debug("*** SBNetIO: Turn Power: " . $iPower . "\n");
+	# Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress);
 	
 	Slim::Control::Jive::refreshPluginMenus($client); 
 }
 
 
 # ----------------------------------------------------------------------------
+sub SetZonePower{
+	my $client = shift;
+	my $iZone = shift;
+	my $iPower = shift;
+	# my $cprefs = $prefs->client($client);
+	# my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
+	
+	# $PowerState{$client} = $iPower;
+	# $InTransition{$client} = 0;
+	
+	$log->debug("*** SBNetIO: SetZonePower: " . $iZone . " - " . $iPower . "\n");
+	# Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress);
+	
+	# Slim::Control::Jive::refreshPluginMenus($client); 
+}
+
+
+
+# ----------------------------------------------------------------------------
+sub TurnPowerOn {
+	my $client = shift;
+
+	SetPowerState($client, 1)
+}
+
+
+# ----------------------------------------------------------------------------
 sub TurnPowerOff {
 	my $client = shift;
-	my $cprefs = $prefs->client($client);
-	my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
 	
-	#flag power state as OFF
-	$PowerState{$client}   = 0;
-	
-	#flag end of transition
-	$InTransition{$client} = 0;
-
-	$log->debug("*** SBNetIO: Turn Power OFF \n");
-	Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOff($client, $srvAddress);
-	
-	Slim::Control::Jive::refreshPluginMenus($client); 
+	SetPowerState($client, 0)
 }
 
 
@@ -442,7 +445,7 @@ sub usingSBNetIO() {
 # ----------------------------------------------------------------------------
 
 # Generates the top menus as elements of the Extras menu
-sub SBNetIO_TopMenu {
+sub ShowTopMenuCB {
 	my $request = shift;
 	my $client = $request->client();
 	my $cprefs = $prefs->client($client);
@@ -503,11 +506,11 @@ sub SBNetIO_TopMenu {
 		# actions  => {
 			# on  => {
 				# player => 0,
-                # cmd    => ['avpSetSM', 1],
+                # cmd    => ['SetPowerStateCB', 1],
             # },
             # off => {
                 # player => 0,
-                # cmd    => ['avpSetSM', 0],
+                # cmd    => ['SetPowerStateCB', 0],
 			# },
 		# },
 	# };
@@ -519,114 +522,136 @@ sub SBNetIO_TopMenu {
 	};
 	
 	# ZONE 1 ==============================================================================================
-	
 	push @menu,	{
 		text => $Zone1Name,
-		icon => $IconZone1,
-		id      => 'Zone1Name',
-	};
-	
-	push @menu,	{
-		text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
-		id      => 'turnon1',
-		icon => $IconOn,
-		nextWindow => "refresh",
-		onClick => "refreshMe",
+		id      => 'Zone1',
+		menuIcon => $IconZone1,
 		actions  => {
-			do  => {
+			go  => {
 				player => 0,
-				cmd    => ['avpSetSM', 1],
-			},
-		},
-	};
-	
-	push @menu,	{
-		text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
-		id      => 'turnoff1',
-		icon => $IconOff,
-		nextWindow => "refresh",
-		onClick => "refreshMe",
-		actions  => {
-			do  => {
-				player => 0,
-				cmd    => ['avpSetSM', 0],
+				cmd    => [ 'ShowZoneMenu', 1],
+				params	=> {
+					menu => 'ShowZoneMenu',
+				},
 			},
 		},
 	};
 	
 	
 	# ZONE 2 ==============================================================================================
-	
 	push @menu,	{
 		text => $Zone2Name,
-		icon => $IconZone2,
-		id      => 'Zone2Name',
-	};
-	
-	push @menu,	{
-		text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
-		id      => 'turnon2',
-		icon => $IconOn,
-		nextWindow => "refresh",
-		onClick => "refreshMe",
+		id      => 'Zone2',
+		menuIcon => $IconZone2,
 		actions  => {
-			do  => {
+			go  => {
 				player => 0,
-				cmd    => ['avpSetSM', 1],
-			},
-		},
-	};
-	
-	push @menu,	{
-		text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
-		id      => 'turnoff2',
-		icon => $IconOff,
-		nextWindow => "refresh",
-		onClick => "refreshMe",
-		actions  => {
-			do  => {
-				player => 0,
-				cmd    => ['avpSetSM', 0],
+				cmd    => [ 'ShowZoneMenu', 2],
+				params	=> {
+					menu => 'ShowZoneMenu',
+				},
 			},
 		},
 	};
 	
 	
 	# ZONE 3 ==============================================================================================
-	
 	push @menu,	{
 		text => $Zone3Name,
-		icon => $IconZone3,
-		id      => 'Zone3Name',
-	};
-	
-	push @menu,	{
-		text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
-		id      => 'turnon3',
-		icon => $IconOn,
-		nextWindow => "refresh",
-		onClick => "refreshMe",
+		id      => 'Zone3',
+		menuIcon => $IconZone3,
 		actions  => {
-			do  => {
+			go  => {
 				player => 0,
-				cmd    => ['avpSetSM', 1],
+				cmd    => [ 'ShowZoneMenu', 3],
+				params	=> {
+					menu => 'ShowZoneMenu',
+				},
 			},
 		},
 	};
 	
-	push @menu,	{
-		text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
-		id      => 'turnoff3',
-		icon => $IconOff,
-		nextWindow => "refresh",
-		onClick => "refreshMe",
-		actions  => {
-			do  => {
-				player => 0,
-				cmd    => ['avpSetSM', 0],
-			},
-		},
+	# push @menu,	{
+		# text => $Zone1Name,
+		# icon => $IconZone1,
+		# id      => 'Zone1Name',
+	# };
+	
+	# push @menu,	{
+		# text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
+		# id      => 'turnon1',
+		# icon => $IconOn,
+		# nextWindow => "refresh",
+		# onClick => "refreshMe",
+		# actions  => {
+			# do  => {
+				# player => 0,
+				# cmd    => ['SetPowerStateCB', 1],
+			# },
+		# },
+	# };
+	
+	# push @menu,	{
+		# text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
+		# id      => 'turnoff1',
+		# icon => $IconOff,
+		# nextWindow => "refresh",
+		# onClick => "refreshMe",
+		# actions  => {
+			# do  => {
+				# player => 0,
+				# cmd    => ['SetPowerStateCB', 0],
+			# },
+		# },
+	# };
+	
+	
+	# ZONE 2 ==============================================================================================
+	
+	# push @menu,	{
+		# text => $Zone2Name,
+		# icon => $IconZone2,
+		# id      => 'Zone2Name',
+	# };
+	
+
+	
+	
+	# ZONE 3 ==============================================================================================
+	
+	# push @menu,	{
+		# text => $Zone3Name,
+		# icon => $IconZone3,
+		# id      => 'Zone3Name',
+	# };
+	
+	# push @menu,	{
+		# text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
+		# id      => 'turnon3',
+		# icon => $IconOn,
+		# nextWindow => "refresh",
+		# onClick => "refreshMe",
+		# actions  => {
+			# do  => {
+				# player => 0,
+				# cmd    => ['SetPowerStateCB', 1],
+			# },
+		# },
 	};
+	
+	# push @menu,	{
+		# text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
+		# id      => 'turnoff3',
+		# icon => $IconOff,
+		# nextWindow => "refresh",
+		# onClick => "refreshMe",
+		# actions  => {
+			# do  => {
+				# player => 0,
+				# cmd    => ['SetPowerStateCB', 0],
+			# },
+		# },
+	# };
 	
 	
 	# =========================================================================================================
@@ -646,76 +671,77 @@ sub SBNetIO_TopMenu {
 }
 
 
-# # Generates the Surround Mode menu, which is a list of all surround modes
-# sub avpSM {
-	# my $request = shift;
-	# my $client = $request->client();
-	# my $cprefs = $prefs->client($client);
-	# my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
+# ----------------------------------------------------------------------------
+sub ShowZoneMenuCB { 
+	my $request = shift;
+	my $client = $request->client();
+
+	my $Zone = $request->getParam('_Zone'); 
+
+	my @menu = ();
 	
-	# my @menu = ();
-	# my $i = 0;
-	# my $check;
-	# $gMenuUpdate = 1; # update menus from avp
-
-	# $log->debug("The value of surroundMode is:" . "\n");
+	push @menu,	{
+		text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
+		id      => 'turnon',
+		icon => $IconOn,
+		nextWindow => "refresh",
+		onClick => "refreshMe",
+		actions  => {
+			do  => {
+				player => 0,
+				cmd    => ['SetZonePowerCB', $Zone, 1],
+			},
+		},
+	};
 	
-	# $check = 1;
-
-	# push @menu, {
-		# text => $client->string('PLUGIN_DENONAVPCONTROL_SURMD'.($i+1)),
-		# radio => $check,
-        # actions  => {
-           # do  => {
-               	# player => 0,
-               	# cmd    => [ 'avpSetSM', 1 , $surroundMode],
-           	# },
-         # },
-
-	# my $numitems = scalar(@menu);
-
-	# $request->addResult("count", $numitems);
-	# $request->addResult("offset", 0);
-	# my $cnt = 0;
-	# for my $eachItem (@menu[0..$#menu]) {
-		# $request->setResultLoopHash('item_loop', $cnt, $eachItem);
-		# $cnt++;
-	# }
-	# $request->setStatusDone();
-
-# }
+	push @menu,	{
+		text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
+		id      => 'turnoff',
+		icon => $IconOff,
+		nextWindow => "refresh",
+		onClick => "refreshMe",
+		actions  => {
+			do  => {
+				player => 0,
+				cmd    => ['SetZonePowerCB', $Zone, 0],
+			},
+		},
+	};
+	
+	$request->setStatusDone();
+}
 
 
 # ----------------------------------------------------------------------------
-sub avpSetSM { # used to set the AVP surround mode
+sub SetPowerStateCB {
 	my $request = shift;
 	my $client = $request->client();
 	my $cprefs = $prefs->client($client);
 
-	my $RequestedPowerState = $request->getParam('_powerstate');
+	my $RequestedPowerState = $request->getParam('_Powerstate');
 	
 	$log->debug("--> SetPowerstate: " . $RequestedPowerState . "\n");
 	
-	#if( $PowerState{$client} == 1){
+	SetPowerState($client, $RequestedPowerState)
 	
-	if( $RequestedPowerState == 1){
-		TurnPowerOn($client);
-	}
-	else{
-		TurnPowerOff($client);
-	}
-	
-	# my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
-	# my $sMode = $request->getParam('_surroundMode'); #surround mode index
-	# my $sOldMode = $request->getParam('_oldSurroundMode'); #old surround mode index
-	# if ($sMode != $sOldMode) { #change the value
-
-	#Slim::Control::Jive::refreshPluginMenus($client);
-	
-	# }
 	$request->setStatusDone();
+}
+
+
+# ----------------------------------------------------------------------------
+sub SetZonePowerCB {
+	my $request = shift;
+	my $client = $request->client();
+	my $cprefs = $prefs->client($client);
+
+	my $Zone = $request->getParam('_Zone');
+	my $Power = $request->getParam('_PowerState');
 	
-	#Slim::Control::Request::executeRequest( $client, [ 'SBNetIO_TopMenu' ] ); 
+	$log->debug("--> SetZonePower: " . $Zone . " - " . $Power ."\n");
+	
+	SetZonePower($client, $Zone, $Power)
+	
+	$request->setStatusDone();
 }
 
 
