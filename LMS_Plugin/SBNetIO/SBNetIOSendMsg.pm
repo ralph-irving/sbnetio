@@ -97,6 +97,7 @@ sub SendSock{
 	die "Could not create socket: $!\n" unless $sock;
 	
 	$sock->send($request);
+	shutdown($sock, 1);
 	$sock->close();
 }
 
