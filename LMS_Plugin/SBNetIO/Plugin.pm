@@ -570,88 +570,6 @@ sub ShowTopMenuCB {
 		},
 	};
 	
-	# push @menu,	{
-		# text => $Zone1Name,
-		# icon => $IconZone1,
-		# id      => 'Zone1Name',
-	# };
-	
-	# push @menu,	{
-		# text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
-		# id      => 'turnon1',
-		# icon => $IconOn,
-		# nextWindow => "refresh",
-		# onClick => "refreshMe",
-		# actions  => {
-			# do  => {
-				# player => 0,
-				# cmd    => ['SetPowerStateCB', 1],
-			# },
-		# },
-	# };
-	
-	# push @menu,	{
-		# text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
-		# id      => 'turnoff1',
-		# icon => $IconOff,
-		# nextWindow => "refresh",
-		# onClick => "refreshMe",
-		# actions  => {
-			# do  => {
-				# player => 0,
-				# cmd    => ['SetPowerStateCB', 0],
-			# },
-		# },
-	# };
-	
-	
-	# ZONE 2 ==============================================================================================
-	
-	# push @menu,	{
-		# text => $Zone2Name,
-		# icon => $IconZone2,
-		# id      => 'Zone2Name',
-	# };
-	
-
-	
-	
-	# ZONE 3 ==============================================================================================
-	
-	# push @menu,	{
-		# text => $Zone3Name,
-		# icon => $IconZone3,
-		# id      => 'Zone3Name',
-	# };
-	
-	# push @menu,	{
-		# text => $client->string('PLUGIN_SBNETIO_TURNONTITLE'),
-		# id      => 'turnon3',
-		# icon => $IconOn,
-		# nextWindow => "refresh",
-		# onClick => "refreshMe",
-		# actions  => {
-			# do  => {
-				# player => 0,
-				# cmd    => ['SetPowerStateCB', 1],
-			# },
-		# },
-	# };
-	
-	# push @menu,	{
-		# text => $client->string('PLUGIN_SBNETIO_TURNOFFTITLE'),
-		# id      => 'turnoff3',
-		# icon => $IconOff,
-		# nextWindow => "refresh",
-		# onClick => "refreshMe",
-		# actions  => {
-			# do  => {
-				# player => 0,
-				# cmd    => ['SetPowerStateCB', 0],
-			# },
-		# },
-	# };
-	
 	
 	# =========================================================================================================
 		
@@ -710,6 +628,16 @@ sub ShowZoneMenuCB {
 		},
 	};
 	
+	my $numitems = scalar(@menu);
+
+	$request->addResult("count", $numitems);
+	$request->addResult("offset", 0);
+	my $cnt = 0;
+	for my $eachItem (@menu[0..$#menu]) {
+		$request->setResultLoopHash('item_loop', $cnt, $eachItem);
+		$cnt++;
+	}
+
 	$request->setStatusDone();
 }
 
