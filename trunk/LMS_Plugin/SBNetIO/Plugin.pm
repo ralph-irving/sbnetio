@@ -472,7 +472,7 @@ sub ShowTopMenuCB {
 		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_On.png';
 	}
 	if( $PState == 0){
-		$TextState = 'Paused'
+		$TextState = 'Paused';
 		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Off.png';
 	}	
 	
