@@ -74,7 +74,7 @@ sub SendMsg{
 
 	$log->debug("Calling writemsg with msg: " . $Cmd . "\n");	
 	
-	#writemsg($request, $client, $url, $timeout);
+	writemsg($request, $client, $url, $timeout);
 }
 
 
