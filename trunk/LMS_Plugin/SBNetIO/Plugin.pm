@@ -465,11 +465,14 @@ sub ShowTopMenuCB {
 	$log->debug("Adding the menu elements to the menu". "\n");
 	
 	my $PState = $PowerState{$client};
+	my $TextState = 'Unknown';
 	my $IconState = 'plugins/SBNetIO/html/images/SBNetIO_Unkn.png';
 	if( $PState == 1){
+		$TextState = 'Playing';
 		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_On.png';
 	}
 	if( $PState == 0){
+		$TextState = 'Paused'
 		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Off.png';
 	}	
 	
@@ -512,7 +515,7 @@ sub ShowTopMenuCB {
 	# };
 	
 	push @menu,	{
-		text => 'State',
+		text => $TextState,
 		icon => $IconState,
 		id      => 'State',
 	};
@@ -521,7 +524,7 @@ sub ShowTopMenuCB {
 	push @menu,	{
 		text => $Zone1Name,
 		id      => 'Zone1',
-		Icon => $IconZone1,
+		icon => $IconZone1,
 		actions  => {
 			go  => {
 				player => 0,
@@ -538,7 +541,7 @@ sub ShowTopMenuCB {
 	push @menu,	{
 		text => $Zone2Name,
 		id      => 'Zone2',
-		Icon => $IconZone2,
+		icon => $IconZone2,
 		actions  => {
 			go  => {
 				player => 0,
@@ -555,7 +558,7 @@ sub ShowTopMenuCB {
 	push @menu,	{
 		text => $Zone3Name,
 		id      => 'Zone3',
-		Icon => $IconZone3,
+		icon => $IconZone3,
 		actions  => {
 			go  => {
 				player => 0,
