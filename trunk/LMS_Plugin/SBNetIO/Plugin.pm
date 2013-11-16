@@ -423,7 +423,7 @@ sub SetZonePower{
 		else{
 			$Cmd = $cprefs->get('msgOff1');
 		}
-		Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress, $Cmd);
+		Plugins::SBNetIO::SBNetIOSendMsg::SendMsg($client, $srvAddress, $Cmd);
 	}
 	
 	if( ($iZone & 2) == 2 ){
@@ -434,7 +434,7 @@ sub SetZonePower{
 		else{
 			$Cmd = $cprefs->get('msgOff2');
 		}
-		Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress, $Cmd);
+		Plugins::SBNetIO::SBNetIOSendMsg::SendMsg($client, $srvAddress, $Cmd);
 	}
 	
 	if( ($iZone & 4) == 4 ){
@@ -445,10 +445,8 @@ sub SetZonePower{
 		else{
 			$Cmd = $cprefs->get('msgOff3');
 		}
-		Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress, $Cmd);
+		Plugins::SBNetIO::SBNetIOSendMsg::SendMsg($client, $srvAddress, $Cmd);
 	}
-
-
 
 }
 
