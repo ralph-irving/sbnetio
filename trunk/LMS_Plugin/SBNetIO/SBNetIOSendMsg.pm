@@ -67,7 +67,7 @@ sub new {
 sub SendMsg{
 	my $client = shift;
 	my $url = shift;
-	my $Cmd = shift
+	my $Cmd = shift;
 	my $timeout = 1;
 	
 	my $request = $Cmd . $CR;
