@@ -88,7 +88,7 @@ sub SendSock{
 	
 	my $request = $Cmd . $CR;
 
-	$log->debug("Send msg: " . $Cmd . " to " . $url . "\n");	
+	$log->debug("Send Sock msg: " . $Cmd . " to " . $url . "\n");	
 	
     my $sock = new IO::Socket::INET(
 	   PeerAddr => '192.168.1.16', 
