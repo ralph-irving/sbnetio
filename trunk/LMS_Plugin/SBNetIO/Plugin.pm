@@ -473,10 +473,6 @@ sub ShowTopMenuCB {
 		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Off.png';
 	}	
 	
-	my $IconOn  = 'plugins/SBNetIO/html/images/SBNetIO_TurnOn.png';
-	my $IconOff = 'plugins/SBNetIO/html/images/SBNetIO_TurnOff.png';
-
-	
 	my $Zone1Name = $cprefs->get('Zone1Name');
     my $IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
 	my $Zone1Auto = $cprefs->get('Zone1Auto');
@@ -677,6 +673,9 @@ sub ShowZoneMenuCB {
 	my $client = $request->client();
 
 	my $Zone = $request->getParam('_Zone'); 
+	
+	my $IconOn  = 'plugins/SBNetIO/html/images/SBNetIO_TurnOn.png';
+	my $IconOff = 'plugins/SBNetIO/html/images/SBNetIO_TurnOff.png';
 
 	my @menu = ();
 	
