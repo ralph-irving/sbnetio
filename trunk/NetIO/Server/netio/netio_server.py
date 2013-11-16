@@ -9,14 +9,21 @@ class Client(asyncore.dispatcher_with_send):
     def __init__(self, socket=None, pollster=None):
         asyncore.dispatcher_with_send.__init__(self, socket)
         self.data = ''
+        self.unregistered = 0
         if pollster:
             self.pollster = pollster
             pollster.register(self, select.EPOLLIN)
+
     def handle_close(self):
-        if self.pollster:
-            self.pollster.unregister(self)
+         if self.unregistered == 0 :
+             if self.pollster:
+                self.pollster.unregister(self)
+                self.unregistered = 1
+                print "Connection closed"
+ 
     def handle_read(self):
         receivedData = self.recv(8192)
+
         if not receivedData:
             self.close()
             return
@@ -32,6 +39,8 @@ class Client(asyncore.dispatcher_with_send):
         client_data =  line
         client_words = client_data.split(' ')
         client_cmd   = client_words[0]
+
+        print line
 
         if client_cmd == "Test":
             print "Test"
@@ -60,6 +69,7 @@ class Server(asyncore.dispatcher):
         self.create_socket(socket.AF_INET, socket.SOCK_STREAM)
         self.bind(listen_to)
         self.listen(5)
+
     def handle_accept(self):
         newSocket, address = self.accept()
         print "Connected from", address
@@ -89,14 +99,17 @@ class EPoll(object):
     def __init__(self):
         self.epoll = select.epoll()
         self.fdmap = {}
+
     def register(self, obj, flags):
         fd = obj.fileno()
         self.epoll.register(fd, flags)
         self.fdmap[fd] = obj
+
     def unregister(self, obj):
         fd = obj.fileno()
         del self.fdmap[fd]
         self.epoll.unregister(fd)
+
     def poll(self):
         evt = self.epoll.poll()
         for fd, flags in evt:

@@ -269,24 +269,24 @@ sub commandCallback {
 	} 
     # Get clients volume adjustment
 	elsif ( $request->isCommand([['mixer'], ['volume']])) {
-		my $volAdjust = $request->getParam('_newvalue');
+		# my $volAdjust = $request->getParam('_newvalue');
 
-		Slim::Utils::Timers::killTimers( $client, \&handleVolChanges);
-		Slim::Utils::Timers::setTimer( $client, (Time::HiRes::time() + .125), \&handleVolChanges, $volAdjust);		
+		# Slim::Utils::Timers::killTimers( $client, \&handleVolChanges);
+		# Slim::Utils::Timers::setTimer( $client, (Time::HiRes::time() + .125), \&handleVolChanges, $volAdjust);		
 	}
 }
 
 
-# ----------------------------------------------------------------------------
-sub handleVolChanges {
-	my $client = shift;
-	my $Vol = shift;
-	my $cprefs = $prefs->client($client);
-	my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
+# # ----------------------------------------------------------------------------
+# sub handleVolChanges {
+	# my $client = shift;
+	# my $Vol = shift;
+	# my $cprefs = $prefs->client($client);
+	# my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
 
-	$log->debug("*** SBNetIO: VolChange: $Vol \n");
-	Plugins::SBNetIO::SBNetIOSendMsg::SendNetVolume($client, $srvAddress, $Vol);
-}
+	# $log->debug("*** SBNetIO: VolChange: $Vol \n");
+	# Plugins::SBNetIO::SBNetIOSendMsg::SendNetVolume($client, $srvAddress, $Vol);
+# }
 
 
 # ----------------------------------------------------------------------------
@@ -800,37 +800,4 @@ sub RunCommand{
 }    
 
 
-# # ----------------------------------------------------------------------------
-# # external volume indication support code
-# # used by iPeng and other controllers
-# sub getexternalvolumeinfoCLI {
-	# my @args = @_;
-	# &reportOnOurPlayers();
-	# if ( defined($getexternalvolumeinfoCoderef) ) {
-		# # chain to the next implementation
-		# return &$getexternalvolumeinfoCoderef(@args);
-	# }
-	# # else we're authoritative
-	# my $request = $args[0];
-	# $request->setStatusDone();
-# }
-
-# # ----------------------------------------------------------------------------
-# sub reportOnOurPlayers() {
-	# # loop through all currently attached players
-	# foreach my $client (Slim::Player::Client::clients()) {
-		# if (&usingSBNetIO($client) ) {
-			# # using our volume control, report on our capabilities
-			# $log->debug("Note that ".$client->name()." uses us for external volume control");
-			# Slim::Control::Request::notifyFromArray($client, ['getexternalvolumeinfo', 0,   1,   string(&getDisplayName())]);
-# #			Slim::Control::Request::notifyFromArray($client, ['getexternalvolumeinfo', 'relative:0', 'precise:1', 'plugin:SBNetIO']);
-			# # precise:1		can set exact volume
-			# # relative:1		can make relative volume changes
-			# # plugin:DenonSerial	this plugin's name
-		# }
-	# }
-# }
-	
-# --------------------------------------- external volume indication code -------------------------------
-# end with something for plugin to do
 1;
