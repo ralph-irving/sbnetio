@@ -96,6 +96,8 @@ sub SendSock{
 	   Proto => 'tcp', ); 
 	die "Could not create socket: $!\n" unless $sock;
 	
+	$sock->autoflush(1);
+	
 	$sock->send($request);
 	shutdown($sock, 1);
 	$sock->close();
