@@ -397,7 +397,7 @@ sub SetPowerState{
 	}
 	
 	if( $Zones > 0 ){
-		SetZonePower($client, $Zones, $Power);
+		SetZonePower($client, $Zones, $iPower);
 	}
 	
 	Slim::Control::Jive::refreshPluginMenus($client); 
