@@ -378,16 +378,26 @@ sub SetZonePower{
 	my $client = shift;
 	my $iZone = shift;
 	my $iPower = shift;
-	# my $cprefs = $prefs->client($client);
+	
+	my $cprefs = $prefs->client($client);
+	
+	if( ($iZone == 1) || ($iZone == 4) ){
+	
+	}
+	
+	if( ($iZone == 2) || ($iZone == 4) ){
+	
+	}
+	
+	if( ($iZone == 3) || ($iZone == 4) ){
+	
+	}
+	
 	# my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
 	
-	# $PowerState{$client} = $iPower;
-	# $InTransition{$client} = 0;
 	
 	$log->debug("*** SBNetIO: SetZonePower: " . $iZone . " - " . $iPower . "\n");
 	# Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress);
-	
-	# Slim::Control::Jive::refreshPluginMenus($client); 
 }
 
 
@@ -481,10 +491,12 @@ sub ShowTopMenuCB {
 		id      => 'State',
 	};
 	
+	my $AnyActiveZone = 0;
 	
 	# ZONE 1 ==============================================================================================
 	my $Zone1Active = $cprefs->get('Zone1Active');
 	if( $Zone1Active == 1 ){
+	    $AnyActiveZone = 1;
 		my $Zone1Name = $cprefs->get('Zone1Name');
 		
 		my $IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
@@ -512,6 +524,7 @@ sub ShowTopMenuCB {
 	# ZONE 2 ==============================================================================================
 	my $Zone2Active = $cprefs->get('Zone2Active');
 	if( $Zone2Active == 1 ){
+		$AnyActiveZone = 1;
 		my $Zone2Name = $cprefs->get('Zone2Name');
 		my $IconZone2 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
 		my $Zone2Auto = $cprefs->get('Zone2Auto');
@@ -538,6 +551,7 @@ sub ShowTopMenuCB {
 	# ZONE 3 ==============================================================================================
 	my $Zone3Active = $cprefs->get('Zone3Active');
 	if( $Zone3Active == 1 ){
+		$AnyActiveZone = 1;
 		my $Zone3Name = $cprefs->get('Zone3Name');
 		my $IconZone3 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
 		my $Zone3Auto = $cprefs->get('Zone3Auto');
@@ -555,6 +569,44 @@ sub ShowTopMenuCB {
 					params	=> {
 						menu => 'ShowZoneMenuCB',
 					},
+				},
+			},
+		};
+	}
+	
+	
+	# =========================================================================================================
+	
+	if( $AnyActiveZone ){
+		push @menu,	{
+			text => ' ',
+			id      => 'Empty',
+		};
+		
+		push @menu,	{
+			text => $client->string('PLUGIN_SBNETIO_TURNONALLTITLE'),
+			id      => 'turnonall',
+			icon => $IconOn,
+			nextWindow => "refresh",
+			onClick => "refreshMe",
+			actions  => {
+				do  => {
+					player => 0,
+					cmd    => ['SetZonePowerCB', 4, 1],
+				},
+			},
+		};
+		
+		push @menu,	{
+			text => $client->string('PLUGIN_SBNETIO_TURNOFFALLTITLE'),
+			id      => 'turnoffall',
+			icon => $IconOff,
+			nextWindow => "refresh",
+			onClick => "refreshMe",
+			actions  => {
+				do  => {
+					player => 0,
+					cmd    => ['SetZonePowerCB', 4, 0],
 				},
 			},
 		};

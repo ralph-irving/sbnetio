@@ -114,5 +114,13 @@ PLUGIN_SBNETIO_TURNONTITLE
 PLUGIN_SBNETIO_TURNOFFTITLE
 	EN	Turn off
 	DE	Ausschalten
+	
+PLUGIN_SBNETIO_TURNONALLTITLE
+	EN	Turn on all zones
+	DE	Alle Zonen einschalten
+
+PLUGIN_SBNETIO_TURNOFFALLTITLE
+	EN	Turn off all zones
+	DE	Alle Zonen ausschalten
 
 
