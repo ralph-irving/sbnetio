@@ -367,7 +367,38 @@ sub SetPowerState{
 	$InTransition{$client} = 0;
 	
 	$log->debug("*** SBNetIO: Turn Power: " . $iPower . "\n");
-	# Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress);
+	
+	my $cprefs = $prefs->client($client);
+	
+	my $Zones = 0;
+	
+	my $Zone1Active = $cprefs->get('Zone1Active');
+	if( $Zone1Active == 1 ){
+		my $Zone1Auto = $cprefs->get('Zone1Auto');
+		if( $Zone1Auto == 1){
+			$Zones = $Zones + 1;
+		}
+	}
+	
+	my $Zone2Active = $cprefs->get('Zone2Active');
+	if( $Zone2Active == 1 ){
+		my $Zone2Auto = $cprefs->get('Zone2Auto');
+		if( $Zone1Auto == 1){
+			$Zones = $Zones + 2;
+		}
+	}
+	
+	my $Zone3Active = $cprefs->get('Zone3Active');
+	if( $Zone3Active == 1 ){
+		my $Zone1Auto = $cprefs->get('Zone3Auto');
+		if( $Zone1Auto == 1){
+			$Zones = $Zones + 4;
+		}
+	}
+	
+	if( $Zones > 0 ){
+		SetZonePower($client, $Zones, $Power);
+	}
 	
 	Slim::Control::Jive::refreshPluginMenus($client); 
 }
@@ -379,25 +410,46 @@ sub SetZonePower{
 	my $iZone = shift;
 	my $iPower = shift;
 	
-	my $cprefs = $prefs->client($client);
-	
-	if( ($iZone == 1) || ($iZone == 4) ){
-	
-	}
-	
-	if( ($iZone == 2) || ($iZone == 4) ){
-	
-	}
-	
-	if( ($iZone == 3) || ($iZone == 4) ){
-	
-	}
-	
-	# my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
-	
-	
 	$log->debug("*** SBNetIO: SetZonePower: " . $iZone . " - " . $iPower . "\n");
-	# Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress);
+	
+	my $cprefs = $prefs->client($client);
+	my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
+	
+	if( ($iZone & 1) == 1 ){
+		my $Cmd = '';
+		if( $iPower == 1 ){
+			$Cmd = $cprefs->get('msgOn1');
+		}
+		else{
+			$Cmd = $cprefs->get('msgOff1');
+		}
+		Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress, $Cmd);
+	}
+	
+	if( ($iZone & 2) == 2 ){
+		my $Cmd = '';
+		if( $iPower == 1 ){
+			$Cmd = $cprefs->get('msgOn2');
+		}
+		else{
+			$Cmd = $cprefs->get('msgOff2');
+		}
+		Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress, $Cmd);
+	}
+	
+	if( ($iZone & 4) == 4 ){
+		my $Cmd = '';
+		if( $iPower == 1 ){
+			$Cmd = $cprefs->get('msgOn3');
+		}
+		else{
+			$Cmd = $cprefs->get('msgOff3');
+		}
+		Plugins::SBNetIO::SBNetIOSendMsg::SendNetPowerOn($client, $srvAddress, $Cmd);
+	}
+
+
+
 }
 
 
@@ -491,12 +543,12 @@ sub ShowTopMenuCB {
 		id      => 'State',
 	};
 	
-	my $AnyActiveZone = 0;
+	my $Zones = 0;
 	
 	# ZONE 1 ==============================================================================================
 	my $Zone1Active = $cprefs->get('Zone1Active');
 	if( $Zone1Active == 1 ){
-	    $AnyActiveZone = 1;
+	    $Zones = $Zones + 1;
 		my $Zone1Name = $cprefs->get('Zone1Name');
 		
 		my $IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
@@ -524,7 +576,7 @@ sub ShowTopMenuCB {
 	# ZONE 2 ==============================================================================================
 	my $Zone2Active = $cprefs->get('Zone2Active');
 	if( $Zone2Active == 1 ){
-		$AnyActiveZone = 1;
+		$Zones = $Zones + 2;
 		my $Zone2Name = $cprefs->get('Zone2Name');
 		my $IconZone2 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
 		my $Zone2Auto = $cprefs->get('Zone2Auto');
@@ -551,7 +603,7 @@ sub ShowTopMenuCB {
 	# ZONE 3 ==============================================================================================
 	my $Zone3Active = $cprefs->get('Zone3Active');
 	if( $Zone3Active == 1 ){
-		$AnyActiveZone = 1;
+		$Zones = $Zones + 4;
 		my $Zone3Name = $cprefs->get('Zone3Name');
 		my $IconZone3 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
 		my $Zone3Auto = $cprefs->get('Zone3Auto');
@@ -565,7 +617,7 @@ sub ShowTopMenuCB {
 			actions  => {
 				go  => {
 					player => 0,
-					cmd    => [ 'ShowZoneMenuCB', 3],
+					cmd    => [ 'ShowZoneMenuCB', 4],
 					params	=> {
 						menu => 'ShowZoneMenuCB',
 					},
@@ -577,7 +629,7 @@ sub ShowTopMenuCB {
 	
 	# =========================================================================================================
 	
-	if( $AnyActiveZone ){
+	if( $Zones > 0 ){
 		my $IconOn  = 'plugins/SBNetIO/html/images/SBNetIO_TurnOn.png';
 	    my $IconOff = 'plugins/SBNetIO/html/images/SBNetIO_TurnOff.png';
 	
@@ -595,7 +647,7 @@ sub ShowTopMenuCB {
 			actions  => {
 				do  => {
 					player => 0,
-					cmd    => ['SetZonePowerCB', 4, 1],
+					cmd    => ['SetZonePowerCB', $Zones, 1],
 				},
 			},
 		};
@@ -609,7 +661,7 @@ sub ShowTopMenuCB {
 			actions  => {
 				do  => {
 					player => 0,
-					cmd    => ['SetZonePowerCB', 4, 0],
+					cmd    => ['SetZonePowerCB', $Zones, 0],
 				},
 			},
 		};
