@@ -28,6 +28,7 @@ use strict;
 use base qw(Slim::Networking::Async);
 
 use URI;
+use IO::Socket;
 use Slim::Utils::Log;
 use Slim::Utils::Misc;
 use Slim::Utils::Prefs;
@@ -74,7 +75,29 @@ sub SendMsg{
 
 	$log->debug("Send msg: " . $Cmd . " to " . $url . "\n");	
 	
-	writemsg($request, $client, $url, $timeout);
+	SendSock($request, $client, $url, $timeout);
+}
+
+
+# ----------------------------------------------------------------------------
+sub SendSock{
+	my $client = shift;
+	my $url = shift;
+	my $Cmd = shift;
+	my $timeout = 1;
+	
+	my $request = $Cmd . $CR;
+
+	$log->debug("Send msg: " . $Cmd . " to " . $url . "\n");	
+	
+    my $sock = new IO::Socket::INET(
+	   PeerAddr => '192.168.1.16', 
+	   PeerPort => '54321', 
+	   Proto => 'tcp', ); 
+	die "Could not create socket: $!\n" unless $sock;
+	
+	print $sock $request;
+	close($sock);
 }
 
 
