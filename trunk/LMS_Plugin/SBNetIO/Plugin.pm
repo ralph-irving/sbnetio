@@ -383,15 +383,15 @@ sub SetPowerState{
 	my $Zone2Active = $cprefs->get('Zone2Active');
 	if( $Zone2Active == 1 ){
 		my $Zone2Auto = $cprefs->get('Zone2Auto');
-		if( $Zone1Auto == 1){
+		if( $Zone2Auto == 1){
 			$Zones = $Zones + 2;
 		}
 	}
 	
 	my $Zone3Active = $cprefs->get('Zone3Active');
 	if( $Zone3Active == 1 ){
-		my $Zone1Auto = $cprefs->get('Zone3Auto');
-		if( $Zone1Auto == 1){
+		my $Zone3Auto = $cprefs->get('Zone3Auto');
+		if( $Zone3Auto == 1){
 			$Zones = $Zones + 4;
 		}
 	}
