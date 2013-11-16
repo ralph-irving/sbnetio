@@ -96,8 +96,7 @@ sub SendSock{
 	   Proto => 'tcp', ); 
 	die "Could not create socket: $!\n" unless $sock;
 	
-	#print $sock $request;
-	$sock->send('RCSend 11111 4 1\n');
+	$sock->send($request);
 	$sock->close();
 }
 
