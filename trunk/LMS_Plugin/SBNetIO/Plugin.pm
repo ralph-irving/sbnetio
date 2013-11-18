@@ -161,7 +161,7 @@ sub newPlayerCheck {
 			my @menu = ({
 				stringToken   => getDisplayName(),
 				id     => 'pluginSBNetIO',
-				menuIcon => $icon,
+				icon => $icon,
 				weight => 9,
 				actions => {
 					go => {
@@ -515,7 +515,6 @@ sub ShowTopMenuCB {
 	
 	my $iPower = $client->power();
 	my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
-	my $refIcon = 'plugins/SBNetIO/html/images/SBNetIO_3.png';
 
 	# Do nothing if plugin is disabled for this client or the power is off
 	if ( !defined( $pluginEnabled) || $pluginEnabled == 0 ) {
