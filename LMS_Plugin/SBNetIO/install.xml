@@ -7,7 +7,7 @@
   	<email>guenther.roll@gmail.com</email> 
   	<homepageURL>http://code.google.com/p/sbnetio/</homepageURL> 
   	<id>6D8FF6EB-EC05-52FA-02AA-ACE56E922128</id> 
-	<icon>plugins/SBNetIO/html/images/icon.png</icon>
+	<icon>plugins/SBNetIO/html/images/SBNetIO.png</icon>
   	<module>Plugins::SBNetIO::Plugin</module> 
  	<targetApplication>
   		<id>SqueezeCenter</id> 
