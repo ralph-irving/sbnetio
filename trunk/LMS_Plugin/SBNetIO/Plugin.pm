@@ -225,7 +225,7 @@ sub commandCallback {
 	$log->debug( "*** SBNetIO: commandCallback() p0: " . $request->{'_request'}[0] . "\n");
 	$log->debug( "*** SBNetIO: commandCallback() p1: " . $request->{'_request'}[1] . "\n");
 
-	if ( $request->isCommand([['power']]){
+	if( $request->isCommand([['power']] ){
 		$log->debug("*** SBNetIO: power request $request \n");
 		my $Power = $client->power();
 
@@ -243,7 +243,7 @@ sub commandCallback {
 		my $playmode    = Slim::Player::Source::playmode($client);
 		$log->debug( "PLAYMODE " . $playmode . "\n");
 		
-		if (($playmode eq "pause") || ($playmode eq "stop") {
+		if( ($playmode eq "pause") || ($playmode eq "stop") ){
 			if( ($PowerState{$client} == 1) || ($InTransition{$client} == 1) ){
 				RequestPowerOff($client);
 			}
