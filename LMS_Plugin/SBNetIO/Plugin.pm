@@ -135,10 +135,16 @@ sub newPlayerCheck {
 			return;
 		}
 		
-		my $iPower = $client->power();
-		
-		# Powerstate unknown
-		$PowerState{$client} = -1;
+		# Initialize Powerstate
+		$PowerState{$client} = 0;
+		my $Power = $client->power();
+		if( $Power == 1 ){
+			if (($playmode eq "pause") || ($playmode eq "stop") {
+				$PowerState{$client} = 0;
+			} else {
+				$PowerState{$client} = 1;
+			}
+		}
 		 
 		$InTransition{$client} = 0;
 
@@ -217,106 +223,67 @@ sub commandCallback {
 	$log->debug( "*** SBNetIO: commandCallback() \n");
 	$log->debug( "*** SBNetIO: commandCallback() p0: " . $request->{'_request'}[0] . "\n");
 	$log->debug( "*** SBNetIO: commandCallback() p1: " . $request->{'_request'}[1] . "\n");
-	
-	my $PowerOnDelay = $cprefs->get('delayOn');	    # Delay to turn on amplifier after player has been turned on (in seconds)
-	my $PowerOffDelay = $cprefs->get('delayOff');	# Delay to turn off amplifier after player has been turned off (in seconds)
-	my $PausePowerOffDelay = 2 * $PowerOffDelay;
-	
-	my $playmode    = Slim::Player::Source::playmode($client);
-	$log->debug( "PLAYMODE " . $playmode . "\n");
-	
-	# Get power on and off commands
-	# Sometimes we do get only a power command, sometimes only a play/pause command and sometimes both
-	if ( $request->isCommand([['power']])
-	  || $request->isCommand([['play']])
-	  || $request->isCommand([['pause']])
-	  || $request->isCommand([['playlist'], ['stop']]) 
-	  || $request->isCommand([['playlist'], ['newsong']]) ){
-	  
-		if( $request->isCommand([['power']]) ){
-			$log->debug("*** SBNetIO: power request $request \n");
-			my $Power = $client->power();
-		
-			# Check with last known power state -> if different switch modes
-			if ( $PowerState{$client} ne $Power) {
-			
-				$log->debug("*** SBNetIO: commandCallback() Power: $Power \n");
 
-				if( $Power == 1) {
-					RequestPowerOn($client, $PowerOnDelay);
-				} else {
-				    RequestPowerOff($client, $PowerOffDelay);
-				}
-			}
+	if ( $request->isCommand([['power']]){
+		$log->debug("*** SBNetIO: power request $request \n");
+		my $Power = $client->power();
+
+		if( $Power == 1) {
+			RequestPowerOn($client);
+		} else {
+		    RequestPowerOff($client);
 		}
-		else{
-		    if( $request->isCommand([['playlist'], ['stop']]) ){
-				RequestPowerOff($client, $PausePowerOffDelay);
+	}
+	elsif ( $request->isCommand([['play']])
+	     || $request->isCommand([['pause']])
+	     || $request->isCommand([['playlist'], ['stop']]) 
+	     || $request->isCommand([['playlist'], ['newsong']]) ){
+		 
+		my $playmode    = Slim::Player::Source::playmode($client);
+		$log->debug( "PLAYMODE " . $playmode . "\n");
+		
+		if (($playmode eq "pause") || ($playmode eq "stop") {
+			if( ($PowerState{$client} == 1) || ($InTransition{$client} == 1) ){
+				RequestPowerOff($client);
 			}
-			else{
-				if( $request->isCommand([['pause']]) ){
-					#if 1) power is unknown or ON or 2) we are in transition to ON, request power OFF
-					if( ($PowerState{$client} == 1) || ($InTransition{$client} == 1) ){
-						RequestPowerOff($client, $PausePowerOffDelay);
-					}
-					else{
-						if( ($PowerState{$client} == 0) || ($InTransition{$client} == -1) ){
-							RequestPowerOn($client, $PowerOnDelay);
-						}
-					}
-				}
-				else{
-					#if 1) power is unknown or OFF or 2) we are in transition to OFF, request power ON
-					if( ($PowerState{$client} == -1) || ($PowerState{$client} == 0) || ($InTransition{$client} == -1) ){
-						RequestPowerOn($client, $PowerOnDelay);
-					}
-				}
+		} else {
+			if( ($PowerState{$client} == 0) || ($InTransition{$client} == -1) ){
+				RequestPowerOn($client);
 			}
 		}
 	} 
     # Get clients volume adjustment
 	elsif ( $request->isCommand([['mixer'], ['volume']])) {
-		# my $volAdjust = $request->getParam('_newvalue');
-
-		# Slim::Utils::Timers::killTimers( $client, \&handleVolChanges);
-		# Slim::Utils::Timers::setTimer( $client, (Time::HiRes::time() + .125), \&handleVolChanges, $volAdjust);		
+		# not used
 	}
 }
-
-
-# # ----------------------------------------------------------------------------
-# sub handleVolChanges {
-	# my $client = shift;
-	# my $Vol = shift;
-	# my $cprefs = $prefs->client($client);
-	# my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
-
-	# $log->debug("*** SBNetIO: VolChange: $Vol \n");
-	# Plugins::SBNetIO::SBNetIOSendMsg::SendNetVolume($client, $srvAddress, $Vol);
-# }
 
 
 # ----------------------------------------------------------------------------
 sub RequestPowerOn {
 	my $client = shift;
-	my $Delay  = shift;
 	my $cprefs = $prefs->client($client);
+	
+	my $Delay = $cprefs->get('delayOn');	 
 	
 	$log->debug("*** SBNetIO: Request Power ON \n");
 	$log->debug("*** SBNetIO: In transition = " . $InTransition{$client} . "\n");
 	
-	# If player is turned on within delay, kill delayed power off timer
+	# Maybe we received a player off request recently - if so, stop TurnOff
 	Slim::Utils::Timers::killTimers($client, \&TurnPowerOff); 
 	
-	# If we are not in a transition to OFF state ...
-	if( $InTransition{$client} > -1 ){
-		
-		# If we are already in a transition to ON state, kill timer
+
+	if( $InTransition{$client} == -1 ){
+		# If we are in transition to OFF state ($InTransition{$client} == -1)
+		# there is nothing left to do, since the PowerOn was stopped above
+	}
+	else{
+		# If we are already in a transition to ON state, kill the old Transition timer
 		if( $InTransition{$client} == 1){
 			Slim::Utils::Timers::killTimers( $client, \&ResetTransitionFlag); 
 		}
 		
-		# flag ON transition
+		# Start ON transition
 		$InTransition{$client} = 1;
 		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&ResetTransitionFlag); 
 		
@@ -335,24 +302,28 @@ sub RequestPowerOff {
 	my $Delay  = shift;
 	my $cprefs = $prefs->client($client);
 	
+	my $Delay = $cprefs->get('delayOff');
+	
 	$log->debug("*** SBNetIO: Request Power OFF \n");
 	$log->debug("*** SBNetIO: In transition = " . $InTransition{$client} . "\n");
 	
 	my $msg = 'Power will be turned off soon';
 	RunCommand( $client, ['display',$msg] );
 		
-	# If player is turned off within delay, kill delayed power on timer
+	# Maybe we received a player off request recently - if so, stop  TurnOn
 	Slim::Utils::Timers::killTimers($client, \&TurnPowerOn); 
 
-	# If we are not in a transition to ON state
-	if( ($InTransition{$client} < 1) ){
-		
-		# If we are already in a transition to OFF state, kill timer
+	if( ($InTransition{$client} == 1) ){
+		# If we are in transition to ON state ($InTransition{$client} == 1)
+		# there is nothing left to do, since the PowerOff was stopped above
+	}
+	else{
+		# If we are already in a transition to OFF state, kill the old Transition timer
 		if( $InTransition{$client} == -1){
 			Slim::Utils::Timers::killTimers( $client, \&ResetTransitionFlag); 
 		}
 		
-		# flag OFF transition
+		# Start OFF transition
 		$InTransition{$client} = -1;
 		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&ResetTransitionFlag); 
 		
@@ -485,7 +456,7 @@ sub TurnPowerOff {
 sub ResetTransitionFlag {
 	my $client = shift;
 
-	#flag end of transition (In case transition was cancelled before delay)
+	#flag end of transition (Good to know in case transition was cancelled before delay)
 	$InTransition{$client} = 0;
 }
 
