@@ -71,36 +71,43 @@ sub SendMsg{
 	my $Cmd = shift;
 	my $timeout = 1;
 	
-	my $request = $Cmd . $CR;
-
 	$log->debug("Send msg: " . $Cmd . " to " . $url . "\n");	
 	
-	SendSock($request, $client, $url, $timeout);
+	SendSock($url, $Cmd);
 }
 
 
 # ----------------------------------------------------------------------------
-sub SendSock{
-	my $client = shift;
+sub SendCmd{
 	my $url = shift;
 	my $Cmd = shift;
 	my $timeout = 1;
 	
-	my $request = $Cmd . "\n";
-
-	$log->debug("Send Sock msg: " . $Cmd . " to " . $url . "\n");	
+	$log->debug("SendCmd: " . $Cmd . " to " . $url . "\n");	
 	
-    my $sock = new IO::Socket::INET(
-	   PeerAddr => '192.168.1.16', 
-	   PeerPort => '54321', 
-	   Proto => 'tcp', ); 
-	die "Could not create socket: $!\n" unless $sock;
-	
-	$sock->autoflush(1);
-	$sock->send($request);
-	
-	shutdown($sock, 2) if $sock;
-    close($sock) if $sock;
+	my @parts = split(':', $url);
+	my $Anzahl = @parts;
+	if( $Anzahl == 2 ){
+		my $IPAddr = @parts[0];
+		my $Port   = @parts[1];
+		
+		my $request = $Cmd . "\n";
+		
+		my $sock = new IO::Socket::INET(
+		   PeerAddr => $IPAddr, 
+		   PeerPort => $Port, 
+		   Proto => 'tcp', ); 
+		die "Could not create socket: $!\n" unless $sock;
+		
+		$sock->autoflush(1);
+		$sock->send($request);
+		
+		shutdown($sock, 2) if $sock;
+		close($sock) if $sock;
+	}
+	else{
+		$log->debug("Invalid URL\n");	
+	}
 }
 
 
