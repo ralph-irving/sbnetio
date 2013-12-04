@@ -229,9 +229,7 @@ sub commandCallback {
 		$log->debug("*** SBNetIO: power request $request \n");
 		my $Power = $client->power();
 
-		if( $Power == 1){
-			RequestPowerOn($client);
-		} else {
+		if( $Power == 0){
 		    RequestPowerOff($client);
 		}
 	}
