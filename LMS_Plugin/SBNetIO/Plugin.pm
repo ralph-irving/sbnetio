@@ -162,7 +162,6 @@ sub newPlayerCheck {
 		} else {
 			if ( $pluginEnabled == 1) {
 				$log->debug( "*** SBNetIO: Plugin Enabled: \n");
-				$log->debug( "*** SBNetIO: IP Address: " . $srvAddress . "\n");
 
 				# Install callback to get client state changes
 				Slim::Control::Request::subscribe( \&commandCallback, [['power', 'play', 'playlist', 'pause', 'client', 'mixer' ]], $client);			
