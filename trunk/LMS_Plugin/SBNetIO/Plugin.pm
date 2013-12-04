@@ -225,11 +225,11 @@ sub commandCallback {
 	$log->debug( "*** SBNetIO: commandCallback() p0: " . $request->{'_request'}[0] . "\n");
 	$log->debug( "*** SBNetIO: commandCallback() p1: " . $request->{'_request'}[1] . "\n");
 
-	if( $request->isCommand([['power']] ){
+	if( $request->isCommand([['power']]) ){
 		$log->debug("*** SBNetIO: power request $request \n");
 		my $Power = $client->power();
 
-		if( $Power == 1) {
+		if( $Power == 1){
 			RequestPowerOn($client);
 		} else {
 		    RequestPowerOff($client);
@@ -272,15 +272,15 @@ sub RequestPowerOn {
 	
 	# Maybe we received a player off request recently - if so, stop TurnOff
 	Slim::Utils::Timers::killTimers($client, \&TurnPowerOff); 
-	
 
 	if( $InTransition{$client} == -1 ){
 		# If we are in transition to OFF state ($InTransition{$client} == -1)
 		# there is nothing left to do, since the PowerOn was stopped above
+		$log->debug("*** SBNetIO: Power ON requested while being in transition to OFF -> Cmds cancel, nothing to do. \n");
 	}
 	else{
 		# If we are already in a transition to ON state, kill the old Transition timer
-		if( $InTransition{$client} == 1){
+		if( $InTransition{$client} == 1 ){
 			Slim::Utils::Timers::killTimers( $client, \&ResetTransitionFlag); 
 		}
 		
@@ -291,9 +291,7 @@ sub RequestPowerOn {
 	    # Launch timer to power on after a delay		
 		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&TurnPowerOn); 
 	}
-	else{
-	    $log->debug("*** SBNetIO: Power ON requested while being in transition to OFF -> Cmds cancel, nothing to do. \n");
-	}
+
 }
 
 
@@ -317,6 +315,7 @@ sub RequestPowerOff {
 	if( ($InTransition{$client} == 1) ){
 		# If we are in transition to ON state ($InTransition{$client} == 1)
 		# there is nothing left to do, since the PowerOff was stopped above
+		$log->debug("*** SBNetIO: Power Off requested while being in transition to ON -> Cmds cancel, nothing to do. \n");
 	}
 	else{
 		# If we are already in a transition to OFF state, kill the old Transition timer
@@ -331,9 +330,7 @@ sub RequestPowerOff {
 		# Launch timer to power off after a delay		
 		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&TurnPowerOff); 
 	}
-	else{
-	    $log->debug("*** SBNetIO: Power Off requested while being in transition to ON -> Cmds cancel, nothing to do. \n");
-	}
+
 }
 
 
