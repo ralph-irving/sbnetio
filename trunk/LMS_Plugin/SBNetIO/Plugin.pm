@@ -509,20 +509,20 @@ sub ShowTopMenuCB {
 	if( $Transit != 0 ){
 		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Trans.png';
 		if( $Transit == 1 ){
-			$TextState = 'Power Off scheduled';
+			$TextState = 'Power On scheduled';
 		}
 		else{
-			$TextState = 'Power On scheduled';
+			$TextState = 'Power Off scheduled';
 		}
 	}
 	else{
 		my $PState = $PowerState{$client};
 		if( $PState == 1){
-			$TextState = 'Power Off';
+			$TextState = 'Power On';
 			$IconState = 'plugins/SBNetIO/html/images/SBNetIO_On.png';
 		}
 		if( $PState == 0){
-			$TextState = 'Power On';
+			$TextState = 'Power Off';
 			$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Off.png';
 		}	
 	}
