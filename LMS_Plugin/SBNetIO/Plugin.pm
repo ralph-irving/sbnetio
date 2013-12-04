@@ -139,7 +139,8 @@ sub newPlayerCheck {
 		$PowerState{$client} = 0;
 		my $Power = $client->power();
 		if( $Power == 1 ){
-			if (($playmode eq "pause") || ($playmode eq "stop") {
+			my $playmode = Slim::Player::Source::playmode($client);
+			if( ($playmode eq "pause") || ($playmode eq "stop") ){
 				$PowerState{$client} = 0;
 			} else {
 				$PowerState{$client} = 1;
