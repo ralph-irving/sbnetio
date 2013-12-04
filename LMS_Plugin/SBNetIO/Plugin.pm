@@ -151,7 +151,6 @@ sub newPlayerCheck {
 
 		#init the client
 		my $cprefs = $prefs->client($client);
-		my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
 		my $pluginEnabled = $cprefs->get('pref_Enabled');
 
 		# Do nothing if plugin is disabled for this client
@@ -161,28 +160,30 @@ sub newPlayerCheck {
 			clearCallback();
 			return;
 		} else {
-			$log->debug( "*** SBNetIO: Plugin Enabled: \n");
-			$log->debug( "*** SBNetIO: IP Address: " . $srvAddress . "\n");
+			if ( $pluginEnabled == 1) {
+				$log->debug( "*** SBNetIO: Plugin Enabled: \n");
+				$log->debug( "*** SBNetIO: IP Address: " . $srvAddress . "\n");
 
-			# Install callback to get client state changes
-			Slim::Control::Request::subscribe( \&commandCallback, [['power', 'play', 'playlist', 'pause', 'client', 'mixer' ]], $client);			
-			
-			$log->debug("Calling the plugin menu register". "\n");
-			# Create SP menu under audio settings	
-			my $icon = 'plugins/SBNetIO/html/images/SBNetIO.png';
-			my @menu = ({
-				stringToken   => getDisplayName(),
-				id     => 'pluginSBNetIO',
-				icon => $icon,
-				weight => 9,
-				actions => {
-					go => {
-						player => 0,
-						cmd	 => [ 'ShowTopMenuCB' ],
+				# Install callback to get client state changes
+				Slim::Control::Request::subscribe( \&commandCallback, [['power', 'play', 'playlist', 'pause', 'client', 'mixer' ]], $client);			
+				
+				$log->debug("Calling the plugin menu register". "\n");
+				# Create SP menu under audio settings	
+				my $icon = 'plugins/SBNetIO/html/images/SBNetIO.png';
+				my @menu = ({
+					stringToken   => getDisplayName(),
+					id     => 'pluginSBNetIO',
+					icon => $icon,
+					weight => 9,
+					actions => {
+						go => {
+							player => 0,
+							cmd	 => [ 'ShowTopMenuCB' ],
+						}
 					}
-				}
-			});
-			Slim::Control::Jive::registerPluginMenu(\@menu, 'extras' ,$client);	
+				});
+				Slim::Control::Jive::registerPluginMenu(\@menu, 'extras' ,$client);
+			}			
 		}
 	}
 }
