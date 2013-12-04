@@ -304,7 +304,7 @@ sub RequestPowerOff {
 	$log->debug("*** SBNetIO: Request Power OFF \n");
 	$log->debug("*** SBNetIO: In transition = " . $InTransition{$client} . "\n");
 	
-	my $msg = "SBNetIO: Zones will be turned off in " . $Delay . "seconds.";
+	my $msg = "SBNetIO: Zones will be turned off in " . $Delay . " seconds.";
 	RunCommand( $client, ['display',$msg] );
 		
 	# Maybe we received a player off request recently - if so, stop  TurnOn
@@ -502,17 +502,30 @@ sub ShowTopMenuCB {
 	my @menu = ();
 	
 	# State ==============================================================================================
-	my $PState = $PowerState{$client};
+	
+	my $Transit = $InTransition{$client};
 	my $TextState = 'Unknown';
 	my $IconState = 'plugins/SBNetIO/html/images/SBNetIO_Unkn.png';
-	if( $PState == 1){
-		$TextState = 'Playing';
-		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_On.png';
+	if( $Transit != 0 ){
+		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Trans.png';
+		if( $Transit == 1 ){
+			$TextState = 'Power Off scheduled';
+		}
+		else{
+			$TextState = 'Power On scheduled';
+		}
 	}
-	if( $PState == 0){
-		$TextState = 'Paused';
-		$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Off.png';
-	}	
+	else{
+		my $PState = $PowerState{$client};
+		if( $PState == 1){
+			$TextState = 'Power Off';
+			$IconState = 'plugins/SBNetIO/html/images/SBNetIO_On.png';
+		}
+		if( $PState == 0){
+			$TextState = 'Power On';
+			$IconState = 'plugins/SBNetIO/html/images/SBNetIO_Off.png';
+		}	
+	}
 	
 	push @menu,	{
 		text => $TextState,
