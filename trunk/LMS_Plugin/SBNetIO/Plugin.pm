@@ -304,7 +304,7 @@ sub RequestPowerOff {
 	$log->debug("*** SBNetIO: Request Power OFF \n");
 	$log->debug("*** SBNetIO: In transition = " . $InTransition{$client} . "\n");
 	
-	my $msg = 'Power will be turned off soon';
+	my $msg = "SBNetIO: Zones will be turned off in " . Delay . "seconds.";
 	RunCommand( $client, ['display',$msg] );
 		
 	# Maybe we received a player off request recently - if so, stop  TurnOn
