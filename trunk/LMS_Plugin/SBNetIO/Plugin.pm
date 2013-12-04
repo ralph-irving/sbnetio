@@ -53,6 +53,11 @@ use Slim::Utils::Log;
 use Slim::Utils::Prefs;
 use Slim::Utils::Misc;
 
+use Slim::Player::Client;
+use Slim::Player::Source;
+use Slim::Player::Playlist;
+
+
 use File::Spec::Functions qw(:ALL);
 use FindBin qw($Bin);
 
@@ -216,7 +221,9 @@ sub commandCallback {
 	my $PowerOnDelay = $cprefs->get('delayOn');	    # Delay to turn on amplifier after player has been turned on (in seconds)
 	my $PowerOffDelay = $cprefs->get('delayOff');	# Delay to turn off amplifier after player has been turned off (in seconds)
 	my $PausePowerOffDelay = 2 * $PowerOffDelay;
-
+	
+	my $playmode    = Slim::Player::Source::playmode($client);
+	$log->debug( "PLAYMODE " . $playmode . "\n");
 	
 	# Get power on and off commands
 	# Sometimes we do get only a power command, sometimes only a play/pause command and sometimes both
@@ -228,14 +235,14 @@ sub commandCallback {
 	  
 		if( $request->isCommand([['power']]) ){
 			$log->debug("*** SBNetIO: power request $request \n");
-			my $iPower = $client->power();
+			my $Power = $client->power();
 		
 			# Check with last known power state -> if different switch modes
-			if ( $PowerState{$client} ne $iPower) {
+			if ( $PowerState{$client} ne $Power) {
 			
-				$log->debug("*** SBNetIO: commandCallback() Power: $iPower \n");
+				$log->debug("*** SBNetIO: commandCallback() Power: $Power \n");
 
-				if( $iPower == 1) {
+				if( $Power == 1) {
 					RequestPowerOn($client, $PowerOnDelay);
 				} else {
 				    RequestPowerOff($client, $PowerOffDelay);
@@ -425,7 +432,7 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff1');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 1, Msg: " . $Cmd . "\n");
-		Plugins::SBNetIO::SBNetIOSendMsg::SendSock($client, $srvAddress, $Cmd);
+		Plugins::SBNetIO::SBNetIOSendMsg::SendCmd($srvAddress, $Cmd);
 	}
 	
 	my $Zone2 = 2;
@@ -438,7 +445,7 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff2');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 2, Msg: " . $Cmd . "\n");
-		Plugins::SBNetIO::SBNetIOSendMsg::SendSock($client, $srvAddress, $Cmd);
+		Plugins::SBNetIO::SBNetIOSendMsg::SendCmd($srvAddress, $Cmd);
 	}
 	
 	my $Zone3 = 4;
@@ -451,7 +458,7 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff3');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 3, Msg: " . $Cmd . "\n");
-		Plugins::SBNetIO::SBNetIOSendMsg::SendSock($client, $srvAddress, $Cmd);
+		Plugins::SBNetIO::SBNetIOSendMsg::SendCmd($srvAddress, $Cmd);
 	}
 
 }
