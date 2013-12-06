@@ -766,7 +766,7 @@ sub ShowZoneMenuCB {
 		text => "Sync Power",
 		id      => 'sync',
 		nextWindow => "refresh",
-		onClick => "refreshMe",
+		onClick => "refreshOrigin",
 		checkbox => $Val,
 		actions  => {
 			on  => {
