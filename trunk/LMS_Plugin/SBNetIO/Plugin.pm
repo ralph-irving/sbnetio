@@ -74,6 +74,10 @@ use Plugins::SBNetIO::Settings;
 my $pluginReady=0; 
 my $gMenuUpdate;	# Used to signal that no menu update should occur
 
+my $gZone1ID = 1;
+my $gZone2ID = 2;
+my $gZone3ID = 4;
+
 
 # Actual power state (needed for internal tracking)
 my %PowerState;
@@ -275,6 +279,9 @@ sub RequestPowerOn {
 		# If we are in transition to OFF state ($InTransition{$client} == -1)
 		# there is nothing left to do, since the PowerOn was stopped above
 		$log->debug("*** SBNetIO: Power ON requested while being in transition to OFF -> Cmds cancel, nothing to do. \n");
+		
+		my $msg = "SBNetIO: Zone turn off cancelled.";
+		RunCommand( $client, ['display',$msg] );
 	}
 	else{
 		# If we are already in a transition to ON state, kill the old Transition timer
@@ -350,7 +357,7 @@ sub SetPowerState{
 	if( $Zone1Active == 1 ){
 		my $Zone1Auto = $cprefs->get('Zone1Auto');
 		if( $Zone1Auto == 1){
-			$Zones = $Zones + 1;
+			$Zones = $Zones + $gZone1ID;
 		}
 	}
 	
@@ -358,7 +365,7 @@ sub SetPowerState{
 	if( $Zone2Active == 1 ){
 		my $Zone2Auto = $cprefs->get('Zone2Auto');
 		if( $Zone2Auto == 1){
-			$Zones = $Zones + 2;
+			$Zones = $Zones + $gZone2ID;
 		}
 	}
 	
@@ -366,7 +373,7 @@ sub SetPowerState{
 	if( $Zone3Active == 1 ){
 		my $Zone3Auto = $cprefs->get('Zone3Auto');
 		if( $Zone3Auto == 1){
-			$Zones = $Zones + 4;
+			$Zones = $Zones + $gZone3ID;
 		}
 	}
 	
@@ -389,8 +396,7 @@ sub SetZonePower{
 	my $cprefs = $prefs->client($client);
 	my $srvAddress = $cprefs->get('srvAddress');
 	
-	my $Zone1 = 1;
-	if( ($iZone & $Zone1) == $Zone1 ){
+	if( ($iZone & $gZone1ID) == $gZone1ID ){
 		my $Cmd = '';
 		if( $iPower == 1 ){
 			$Cmd = $cprefs->get('msgOn1');
@@ -402,8 +408,7 @@ sub SetZonePower{
 		Plugins::SBNetIO::SBNetIOSendMsg::SendCmd($srvAddress, $Cmd);
 	}
 	
-	my $Zone2 = 2;
-	if( ($iZone & $Zone2) == $Zone2 ){
+	if( ($iZone & $gZone2ID) == $gZone2ID ){
 		my $Cmd = '';
 		if( $iPower == 1 ){
 			$Cmd = $cprefs->get('msgOn2');
@@ -415,8 +420,7 @@ sub SetZonePower{
 		Plugins::SBNetIO::SBNetIOSendMsg::SendCmd($srvAddress, $Cmd);
 	}
 	
-	my $Zone3 = 4;
-	if( ($iZone & $Zone3) == $Zone3 ){
+	if( ($iZone & $gZone3ID) == $gZone3ID ){
 		my $Cmd = '';
 		if( $iPower == 1 ){
 			$Cmd = $cprefs->get('msgOn3');
@@ -464,13 +468,10 @@ sub usingSBNetIO() {
 	my $cprefs = $prefs->client($client);
 	my $pluginEnabled = $cprefs->get('pref_Enabled');
 
-	# cannot use DS if no digital out (as with Baby)
-	if ( (!$client->hasDigitalOut()) || ($client->model() eq 'baby')) {
-		return 0;
-	}
  	if ($pluginEnabled == 1) {
 		return 1;
 	}
+	
 	return 0;
 }
 
@@ -538,7 +539,7 @@ sub ShowTopMenuCB {
 	# ZONE 1 ==============================================================================================
 	my $Zone1Active = $cprefs->get('Zone1Active');
 	if( $Zone1Active == 1 ){
-	    $Zones = $Zones + 1;
+	    $Zones = $Zones +  $gZone1ID;
 		my $Zone1Name = $cprefs->get('Zone1Name');
 		
 		my $IconZone1 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
@@ -553,7 +554,7 @@ sub ShowTopMenuCB {
 			actions  => {
 				go  => {
 					player => 0,
-					cmd    => [ 'ShowZoneMenuCB', 1],
+					cmd    => [ 'ShowZoneMenuCB', $gZone1ID],
 					params	=> {
 						menu => 'ShowZoneMenuCB',
 					},
@@ -566,7 +567,7 @@ sub ShowTopMenuCB {
 	# ZONE 2 ==============================================================================================
 	my $Zone2Active = $cprefs->get('Zone2Active');
 	if( $Zone2Active == 1 ){
-		$Zones = $Zones + 2;
+		$Zones = $Zones + $gZone2ID;
 		my $Zone2Name = $cprefs->get('Zone2Name');
 		my $IconZone2 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
 		my $Zone2Auto = $cprefs->get('Zone2Auto');
@@ -580,7 +581,7 @@ sub ShowTopMenuCB {
 			actions  => {
 				go  => {
 					player => 0,
-					cmd    => [ 'ShowZoneMenuCB', 2],
+					cmd    => [ 'ShowZoneMenuCB', $gZone2ID],
 					params	=> {
 						menu => 'ShowZoneMenuCB',
 					},
@@ -593,7 +594,7 @@ sub ShowTopMenuCB {
 	# ZONE 3 ==============================================================================================
 	my $Zone3Active = $cprefs->get('Zone3Active');
 	if( $Zone3Active == 1 ){
-		$Zones = $Zones + 4;
+		$Zones = $Zones + $gZone3ID;
 		my $Zone3Name = $cprefs->get('Zone3Name');
 		my $IconZone3 = 'plugins/SBNetIO/html/images/SBNetIO_Zone.png';
 		my $Zone3Auto = $cprefs->get('Zone3Auto');
@@ -607,7 +608,7 @@ sub ShowTopMenuCB {
 			actions  => {
 				go  => {
 					player => 0,
-					cmd    => [ 'ShowZoneMenuCB', 4],
+					cmd    => [ 'ShowZoneMenuCB', $gZone3ID],
 					params	=> {
 						menu => 'ShowZoneMenuCB',
 					},
