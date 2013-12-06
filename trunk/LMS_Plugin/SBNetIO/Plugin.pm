@@ -121,6 +121,7 @@ sub initPlugin {
 	Slim::Control::Request::addDispatch(['ShowZoneMenuCB', '_Zone'],[1, 1, 0, \&ShowZoneMenuCB]);
 	Slim::Control::Request::addDispatch(['SetPowerStateCB', '_Powerstate'],[1, 1, 0, \&SetPowerStateCB]);
 	Slim::Control::Request::addDispatch(['SetZonePowerCB', '_Zone', '_Powerstate'],[1, 1, 0, \&SetZonePowerCB]);
+    Slim::Control::Request::addDispatch(['SetZoneSyncCB', '_Zone', '_Syncstate'],[1, 1, 0, \&SetZoneSyncCB]);
 }
 
 # ----------------------------------------------------------------------------
@@ -435,6 +436,29 @@ sub SetZonePower{
 }
 
 
+# ----------------------------------------------------------------------------
+sub SetZoneSync{
+	my $client = shift;
+	my $iZone = shift;
+	my $iSync = shift;
+	
+	$log->debug("*** SBNetIO: SetZoneSync: " . $iZone . " - " . $iSync . "\n");
+	
+	my $cprefs = $prefs->client($client);
+	
+	if( ($iZone & $gZone1ID) == $gZone1ID ){
+		$cprefs->set('Zone1Auto', $iSync);
+	}
+	
+	if( ($iZone & $gZone2ID) == $gZone2ID ){
+		$cprefs->set('Zone2Auto', $iSync);
+	}
+	
+	if( ($iZone & $gZone3ID) == $gZone3ID ){
+		$cprefs->set('Zone3Auto', $iSync);
+	}
+}
+
 
 # ----------------------------------------------------------------------------
 sub TurnPowerOn {
@@ -718,6 +742,44 @@ sub ShowZoneMenuCB {
 		},
 	};
 	
+	
+	my $cprefs = $prefs->client($client);
+	
+	my $Val = 0;
+	
+	if( $iZone == $gZone1ID ){
+		$Val = $cprefs->get('Zone1Auto', $iSync);
+	}
+	else{
+		if( $iZone == $gZone2ID ){
+			$Val = $cprefs->get('Zone2Auto', $iSync);
+		}
+		else{
+			if( $iZone == $gZone3ID ){
+				$Val = $cprefs->get('Zone3Auto', $iSync);
+			}
+		}
+	}
+	
+	
+	push @menu,	{
+		text => "Sync Power",
+		id      => 'sync',
+		nextWindow => "refresh",
+		onClick => "refreshMe",
+		checkbox => $Val,
+		actions  => {
+			on  => {
+				player => 0,
+				cmd    => ['SetZoneSyncCB', $Zone, 1],
+			},
+			off  => {
+				player => 0,
+				cmd    => ['SetZoneSyncCB', $Zone, 0],
+			},
+		},
+	};
+	
 	my $numitems = scalar(@menu);
 
 	$request->addResult("count", $numitems);
@@ -760,6 +822,23 @@ sub SetZonePowerCB {
 	$log->debug("--> SetZonePowerCB: " . $Zone . " - " . $Power ."\n");
 	
 	SetZonePower($client, $Zone, $Power);
+	
+	$request->setStatusDone();
+}
+
+
+# ----------------------------------------------------------------------------
+sub SetZoneSyncCB {
+	my $request = shift;
+	my $client = $request->client();
+	my $cprefs = $prefs->client($client);
+
+	my $Zone = $request->getParam('_Zone');
+	my $Sync = $request->getParam('_Syncstate');
+	
+	$log->debug("--> SetZoneSyncCB: " . $Zone . " - " . $Sync ."\n");
+	
+	SetZoneSync($client, $Zone, $Sync);
 	
 	$request->setStatusDone();
 }
