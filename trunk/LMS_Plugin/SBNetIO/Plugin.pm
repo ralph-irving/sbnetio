@@ -747,15 +747,15 @@ sub ShowZoneMenuCB {
 	
 	my $Val = 0;
 	
-	if( $iZone == $gZone1ID ){
+	if( $Zone == $gZone1ID ){
 		$Val = $cprefs->get('Zone1Auto', $iSync);
 	}
 	else{
-		if( $iZone == $gZone2ID ){
+		if( $Zone == $gZone2ID ){
 			$Val = $cprefs->get('Zone2Auto', $iSync);
 		}
 		else{
-			if( $iZone == $gZone3ID ){
+			if( $Zone == $gZone3ID ){
 				$Val = $cprefs->get('Zone3Auto', $iSync);
 			}
 		}
