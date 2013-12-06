@@ -517,7 +517,6 @@ sub ShowTopMenuCB {
 	my $pluginEnabled = $cprefs->get('pref_Enabled');
 	
 	my $iPower = $client->power();
-	my $srvAddress = "HTTP://" . $cprefs->get('srvAddress');
 
 	# Do nothing if plugin is disabled for this client or the power is off
 	if ( !defined( $pluginEnabled) || $pluginEnabled == 0 ) {
