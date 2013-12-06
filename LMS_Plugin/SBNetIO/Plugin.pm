@@ -281,7 +281,7 @@ sub RequestPowerOn {
 		# there is nothing left to do, since the PowerOn was stopped above
 		$log->debug("*** SBNetIO: Power ON requested while being in transition to OFF -> Cmds cancel, nothing to do. \n");
 		
-		$InTransition{$client} == 0;
+		$InTransition{$client} = 0;
 		
 		my $msg = "SBNetIO: Zone turn off cancelled.";
 		RunCommand( $client, ['display',$msg] );
@@ -325,7 +325,7 @@ sub RequestPowerOff {
 		# there is nothing left to do, since the PowerOff was stopped above
 		$log->debug("*** SBNetIO: Power Off requested while being in transition to ON -> Cmds cancel, nothing to do. \n");
 		
-		$InTransition{$client} == 0;
+		$InTransition{$client} = 0;
 	}
 	else{
 		# If we are already in a transition to OFF state, kill the old Transition timer
