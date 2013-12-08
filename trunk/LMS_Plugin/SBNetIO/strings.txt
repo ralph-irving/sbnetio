@@ -8,8 +8,8 @@ PLUGIN_SBNETIO_MODULE_NAME
 	DE	SBNetIO
 
 PLUGIN_SBNETIO_DESCRIPTION
-	EN	This plugin sends commands to a home automation server on player power on/off.
-	DE	Dieses Plugin sendet Kommandos zu einem Home Automation Server, wenn sich der Einschaltzustand des Players aendert.
+	EN	This plugin sends commands to a home automation server when the playback state changes.
+	DE	Dieses Plugin sendet Kommandos zu einem Home Automation Server, wenn sich der Zustand des Players aendert.
 
 PLUGIN_SBNETIO_BASIC_SETTINGS_HEADER
 	EN	Changes made here effect the functionality of the SBNetIO plugin.
