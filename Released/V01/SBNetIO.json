@@ -1,0 +1,253 @@
+{
+	"type": "NetIOConfiguration",
+	"name": "SBNetIO",
+	"description": "SBNetIO example configuration",
+	"version": 1.3,
+	"connections": [
+		{
+			"name": "Automation Server",
+			"host": "192.168.1.16",
+			"port": 54321,
+			"commandTermination": " \n",
+			"protocol": "socket",
+			"format": "string"
+		}
+	],
+	"pages": [
+		{
+			"name": "SBNetIO",
+			"label": "SBNetIO",
+			"connection": "Automation Server",
+			"items": [
+				{
+					"top": 70,
+					"left": 40,
+					"width": 210,
+					"height": 70,
+					"type": "button",
+					"label": "On",
+					"shape": "rounded",
+					"fontsize": 16,
+					"textcolor": "66,247,2",
+					"sends": [
+						"RCSend 11111 4 1"
+					],
+					"background": "80,80,80"
+				},
+				{
+					"top": 70,
+					"left": 460,
+					"width": 220,
+					"height": 70,
+					"type": "button",
+					"label": "Off",
+					"shape": "rounded",
+					"fontsize": 16,
+					"textcolor": "255,0,0",
+					"sends": [
+						"RCSend 11111 4 0"
+					],
+					"background": "80,80,80"
+				},
+				{
+					"top": 20,
+					"left": 20,
+					"width": 680,
+					"height": 40,
+					"type": "label",
+					"text": "Zone 1",
+					"background": "200,200,200",
+					"textcolor": "0,0,0",
+					"fontsize": 14,
+					"textalign": "center"
+				},
+				{
+					"top": 250,
+					"left": 20,
+					"width": 680,
+					"height": 40,
+					"type": "label",
+					"text": "Zone 2",
+					"background": "200,200,200",
+					"textcolor": "0,0,0",
+					"fontsize": 14,
+					"textalign": "center"
+				},
+				{
+					"top": 300,
+					"left": 40,
+					"width": 210,
+					"height": 70,
+					"type": "button",
+					"label": "On",
+					"shape": "rounded",
+					"fontsize": 16,
+					"textcolor": "66,247,2",
+					"background": "80,80,80",
+					"sends": [
+						"RCSend 11111 1 1"
+					]
+				},
+				{
+					"top": 300,
+					"left": 460,
+					"width": 220,
+					"height": 70,
+					"type": "button",
+					"label": "Off",
+					"shape": "rounded",
+					"fontsize": 16,
+					"textcolor": "255,0,9",
+					"background": "80,80,80",
+					"sends": [
+						"RCSend 11111 1 0"
+					]
+				},
+				{
+					"top": 990,
+					"left": 20,
+					"width": 680,
+					"height": 40,
+					"type": "button",
+					"label": "",
+					"shape": "rounded",
+					"fontsize": 16,
+					"formatResponse": "{0}.png",
+					"parseResponse": ".*$",
+					"icon": "red",
+					"reads": "Test ",
+					"background": "80,80,80"
+				},
+				{
+					"top": 950,
+					"left": 280,
+					"width": 160,
+					"height": 30,
+					"type": "label",
+					"text": "Server State",
+					"background": "45,45,45",
+					"textcolor": "200,200,200",
+					"fontsize": 12
+				},
+				{
+					"top": 480,
+					"left": 20,
+					"width": 680,
+					"height": 40,
+					"type": "label",
+					"text": "Zone 3",
+					"background": "200,200,200",
+					"textcolor": "0,0,0",
+					"fontsize": 14,
+					"textalign": "center"
+				},
+				{
+					"top": 530,
+					"left": 40,
+					"width": 210,
+					"height": 70,
+					"type": "button",
+					"label": "On",
+					"shape": "rounded",
+					"fontsize": 16,
+					"textcolor": "66,247,2",
+					"background": "80,80,80",
+					"sends": [
+						"RCSend 11111 2 1"
+					]
+				},
+				{
+					"top": 530,
+					"left": 460,
+					"width": 220,
+					"height": 70,
+					"type": "button",
+					"label": "Off",
+					"shape": "rounded",
+					"fontsize": 16,
+					"textcolor": "255,0,9",
+					"background": "80,80,80",
+					"sends": [
+						"RCSend 11111 2 0"
+					]
+				},
+				{
+					"top": 710,
+					"left": 20,
+					"width": 680,
+					"height": 40,
+					"type": "label",
+					"text": "All Zones",
+					"background": "200,200,200",
+					"textcolor": "0,0,0",
+					"fontsize": 14,
+					"textalign": "center"
+				},
+				{
+					"top": 760,
+					"left": 40,
+					"width": 210,
+					"height": 70,
+					"type": "button",
+					"label": "All On",
+					"shape": "rounded",
+					"fontsize": 16,
+					"textcolor": "66,247,2",
+					"background": "80,80,80",
+					"sends": [
+						"RCSend 11111 1 1",
+						"__wait 500",
+						"RCSend 11111 2 1",
+						"__wait 500",
+						"RCSend 11111 4 1"
+					]
+				},
+				{
+					"top": 760,
+					"left": 460,
+					"width": 220,
+					"height": 70,
+					"type": "button",
+					"label": "All Off",
+					"shape": "rounded",
+					"fontsize": 16,
+					"textcolor": "255,0,9",
+					"background": "80,80,80",
+					"sends": [
+						"RCSend 11111 1 0",
+						"__wait 500",
+						"RCSend 11111 2 0",
+						"__wait 500",
+						"RCSend 11111 4 0"
+					]
+				},
+				{
+					"top": 965,
+					"left": 30,
+					"width": 240,
+					"height": 5,
+					"type": "label",
+					"text": "",
+					"background": "200,200,200"
+				},
+				{
+					"top": 965,
+					"left": 450,
+					"width": 240,
+					"height": 5,
+					"type": "label",
+					"text": "",
+					"background": "200,200,200"
+				}
+			],
+			"width": 720,
+			"height": 1280,
+			"fitToScreen": false,
+			"hapticFeedback": true
+		}
+	],
+	"device": "Xperia ion LTE",
+	"navigation": "fix",
+	"pagebuttonwidth": "static",
+	"orientation": "portrait"
+}
