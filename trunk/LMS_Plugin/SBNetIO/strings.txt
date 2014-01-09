@@ -48,15 +48,15 @@ PLUGIN_SBNETIO_SRVADDRESS
 	DE	Connection
 
 PLUGIN_SBNETIO_SRVADDRESS_DESC
-	EN	Enter the IP Address of the home automation server ([http://]xxx.xxx.xxx.xxx:Port). If the connection string starts with 'http://', a http-GET request is issued. Note: This plugin will only work for fixed IP addresses.
-	DE	Geben Sie die IP-Adresse des Home Automation Servers ein ([http://]xxx.xxx.xxx.xxx:Port). Wenn der Connection-String mit 'http://' beginnt, wird ein http-GET request ausgeführt. Achtung: Dieses Plugin funktioniert nur mit festen IP-Adressen.
+	EN	Enter the address of the home automation server ([http://[<user>:<pw>@]]xxx.xxx.xxx.xxx:<port>). If the connection string starts with 'http://', a http-GET request is issued. Note: This plugin will only work for fixed IP addresses.
+	DE	Geben Sie die Adresse des Home Automation Servers ein ([http://[<user>:<pw>@]]xxx.xxx.xxx.xxx:<port>). Wenn der Connection-String mit 'http://' beginnt, wird ein http-GET request ausgeführt. Achtung: Dieses Plugin funktioniert nur mit festen IP-Adressen.
 
 PLUGIN_SBNETIO_ONDELAY
 	EN	Turn on delay
 	DE	Einschaltverzoegerung
 
 PLUGIN_SBNETIO_ONDELAY_DESC
-	EN	Enter the number of seconds you want to wait for after the Squeezebox is turned on before the turn on command is sent.
+	EN	Enter the number of seconds you want to wait until the turn on command is sent when the Squeezebox is turned on.
 	DE	Geben Sie ein, wie viele Sekunden Sie nach dem Einschalten der Squeezebox warten wollen, bevor die Einschaltkommando gesendet wird.
 	
 PLUGIN_SBNETIO_OFFDELAY
@@ -64,7 +64,7 @@ PLUGIN_SBNETIO_OFFDELAY
 	DE	Ausschaltverzoegerung
 	
 PLUGIN_SBNETIO_OFFDELAY_DESC
-	EN	Enter the number of seconds you want to wait for after the Squeezebox is turned off before the turn off command is sent.
+	EN	Enter the number of seconds you want to wait until the turn off command is sent when the Squeezebox is turned off before.
 	DE	Geben Sie die Anzahl der Sekunden ein, die Sie nach dem Ausschalten der Squeezebox warten wollen, bevor Ausschaltkommando gesendet wird.
 	
 PLUGIN_SBNETIO_OFFMSG
