@@ -73,7 +73,7 @@ sub SendCmd{
 	
 	$log->debug("SendCmd - Addr: " . $Addr . ", Cmd: " . $Cmd . "\n");
 	
-	my $http = "http://"
+	my $http = "http://";
 	
 	if( index($Addr, $http) == 0 ) {
 		HTTPSend($Addr, $Cmd);
