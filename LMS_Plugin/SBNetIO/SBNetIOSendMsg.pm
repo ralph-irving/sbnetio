@@ -32,6 +32,7 @@ use IO::Socket;
 use Slim::Utils::Log;
 use Slim::Utils::Misc;
 use Slim::Utils::Prefs;
+use Slim::Networking::SimpleAsyncHTTP
 use Socket qw(:crlf);
 
 # ----------------------------------------------------------------------------
@@ -66,13 +67,32 @@ sub new {
 
 # ----------------------------------------------------------------------------
 sub SendCmd{
-	my $url = shift;
+	my $Addr = shift;
 	my $Cmd = shift;
 	my $timeout = 1;
 	
-	$log->debug("SendCmd: " . $Cmd . " to " . $url . "\n");	
+	$log->debug("SendCmd - Addr: " . $Addr . ", Cmd: " . $Cmd . "\n");
 	
-	my @parts = split(':', $url);
+	my $http = "http://"
+	
+	if( index($Addr, $http) == 0 ) {
+		HTTPSend($Addr, $Cmd);
+	}
+	else{
+		SocketSend($Addr, $Cmd);
+	}	
+}
+
+
+# ----------------------------------------------------------------------------
+sub SocketSend{
+	my $Addr = shift;
+	my $Cmd = shift;
+	my $timeout = 1;
+	
+	$log->debug("SocketSend - Addr: " . $Addr . ", Cmd: " . $Cmd . "\n");
+	
+	my @parts = split(':', $Addr);
 	my $Anzahl = @parts;
 	if( $Anzahl == 2 ){
 		my $IPAddr = @parts[0];
@@ -93,11 +113,51 @@ sub SendCmd{
 		close($sock) if $sock;
 	}
 	else{
-		$log->debug("Invalid URL\n");	
+		$log->debug("Invalid Adress\n");	
 	}
 }
 
 
+# ----------------------------------------------------------------------------
+sub HTTPSend{
+	my $Addr = shift;
+	my $Cmd = shift;
+	my $timeout = 1;
+	
+	$log->debug("HTTPSend - Addr: " . $Addr . ", Cmd: " . $Cmd . "\n");
+	
+	my $http = Slim::Networking::SimpleAsyncHTTP->new(
+			\&HttpSuccessCB,
+			\&HttpErrorCB, 
+			{
+				mydata'  => 'foo',
+				#cache    => 0,		# optional, cache result of HTTP request
+				#expires => '1h',	# optional, specify the length of time to cache
+			}
+	);
+	
+	my $url = $Addr . "/" . $Cmd;
+	
+	$http->get($url);
+}
+
+
+# ----------------------------------------------------------------------------
+sub HttpErrorCB {
+    my $http = shift;
+
+    $log->debug("Oh no! An error!\n");
+}
+
+
+# ----------------------------------------------------------------------------
+sub HttpSuccessCB{
+    my $http = shift;
+
+    my $content = $http->content();
+	
+	$log->debug("HTTP Response: " . $content . "\n");
+}
 
 
 1;
