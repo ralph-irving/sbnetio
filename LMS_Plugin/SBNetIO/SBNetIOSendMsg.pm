@@ -136,7 +136,7 @@ sub HTTPSend{
 			}
 	);
 	
-	my $url = $Addr . "/" . $Cmd;
+	my $url = $Addr . $Cmd;
 	
 	$http->get($url);
 }
