@@ -130,7 +130,7 @@ sub HTTPSend{
 			\&HttpSuccessCB,
 			\&HttpErrorCB, 
 			{
-				mydata'  => 'foo',
+				#mydata'  => 'foo',
 				#cache    => 0,		# optional, cache result of HTTP request
 				#expires => '1h',	# optional, specify the length of time to cache
 			}
