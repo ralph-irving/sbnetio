@@ -48,8 +48,8 @@ PLUGIN_SBNETIO_SRVADDRESS
 	DE	Connection
 
 PLUGIN_SBNETIO_SRVADDRESS_DESC
-	EN	Enter the address of the home automation server ([http://[<user>:<pw>@]]xxx.xxx.xxx.xxx:<port>). If the connection string starts with 'http://', a http-GET request is issued. Note: This plugin will only work for fixed IP addresses.
-	DE	Geben Sie die Adresse des Home Automation Servers ein ([http://[<user>:<pw>@]]xxx.xxx.xxx.xxx:<port>). Wenn der Connection-String mit 'http://' beginnt, wird ein http-GET request ausgeführt. Achtung: Dieses Plugin funktioniert nur mit festen IP-Adressen.
+	EN	Enter the address of the home automation server ([http://[user:pw@]]xxx.xxx.xxx.xxx:port). If the connection string starts with 'http://', a http-GET request is issued. Note: This plugin will only work for fixed IP addresses.
+	DE	Geben Sie die Adresse des Home Automation Servers ein ([http://[user:pw@]]xxx.xxx.xxx.xxx:port). Wenn der Connection-String mit 'http://' beginnt, wird ein http-GET request ausgeführt. Achtung: Dieses Plugin funktioniert nur mit festen IP-Adressen.
 
 PLUGIN_SBNETIO_ONDELAY
 	EN	Turn on delay
