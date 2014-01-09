@@ -32,7 +32,7 @@ use IO::Socket;
 use Slim::Utils::Log;
 use Slim::Utils::Misc;
 use Slim::Utils::Prefs;
-use Slim::Networking::SimpleAsyncHTTP
+use Slim::Networking::SimpleAsyncHTTP;
 use Socket qw(:crlf);
 
 # ----------------------------------------------------------------------------
