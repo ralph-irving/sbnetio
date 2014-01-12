@@ -92,7 +92,7 @@ my $log = Slim::Utils::Log->addLogCategory({
 });
 
 # ----------------------------------------------------------------------------
-my $prefs = preferences('plugin.SBNetIO');
+my $prefs = preferences('plugin.SBNetIO'); 	#name of preferences file: prefs\plugin\SBNetIO.pref
 
 # ----------------------------------------------------------------------------
 sub initPlugin {
