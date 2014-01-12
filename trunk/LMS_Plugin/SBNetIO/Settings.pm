@@ -23,13 +23,13 @@ my $classPlugin		= undef;
 
 # ----------------------------------------------------------------------------
 my $log = Slim::Utils::Log->addLogCategory({
-	'category'     => 'plugin.sbnetio',
+	'category'     => 'plugin.SBNetIO',
 	'defaultLevel' => 'ERROR',
 	'description'  => 'PLUGIN_SBNETIO_MODULE_NAME',
 });
 
 # ----------------------------------------------------------------------------
-my $prefs = preferences('plugin.sbnetio'); #name of preferences
+my $prefs = preferences('plugin.SBNetIO'); #name of preferences file: prefs\plugin\SBNetIO.pref
 
 # ----------------------------------------------------------------------------
 # Define own constructor
