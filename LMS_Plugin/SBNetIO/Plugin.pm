@@ -157,11 +157,17 @@ sub newPlayerCheck {
 		#init the client
 		my $cprefs = $prefs->client($client);
 		my $pluginEnabled = $cprefs->get('pref_Enabled');
+		
+		if ( !defined( $pluginEnabled) ){
+			$log->debug( "*** SBNetIO: Failed to read prefs for: ".$client->name()."\n");
+			$log->debug( "*** SBNetIO: will not be activated.\n");
+			clearCallback();
+			return;
+		}
 
 		# Do nothing if plugin is disabled for this client
-		if ( !defined( $pluginEnabled) || $pluginEnabled == 0) {
+		if ( $pluginEnabled == 0) {
 			$log->debug( "*** SBNetIO: Plugin Not Enabled for: ".$client->name()."\n");
-			#now clear callback for those clients that are not part of the plugin
 			clearCallback();
 			return;
 		} else {
