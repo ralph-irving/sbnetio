@@ -83,6 +83,8 @@ my $gZone3ID = 4;
 my %PowerState;
 my %InTransition;
 
+my %OrgVolume;
+
 
 # ----------------------------------------------------------------------------
 my $log = Slim::Utils::Log->addLogCategory({
@@ -231,10 +233,10 @@ sub commandCallback {
 		return;
 	}
 	my $cprefs = $prefs->client($client);
-
-	$log->debug( "*** SBNetIO: commandCallback() \n");
-	$log->debug( "*** SBNetIO: commandCallback() p0: " . $request->{'_request'}[0] . "\n");
-	$log->debug( "*** SBNetIO: commandCallback() p1: " . $request->{'_request'}[1] . "\n");
+	
+	$log->debug( "*** SBNetIO: commandCallback() Client : " . $client->name() . "\n");
+	$log->debug( "*** SBNetIO: commandCallback()    p0  : " . $request->{'_request'}[0] . "\n");
+	$log->debug( "*** SBNetIO: commandCallback()    p1  : " . $request->{'_request'}[1] . "\n");
 
 	if( $request->isCommand([['power']]) ){
 		$log->debug("*** SBNetIO: power request $request \n");
@@ -246,6 +248,7 @@ sub commandCallback {
 	}
 	elsif ( $request->isCommand([['play']])
 	     || $request->isCommand([['pause']])
+		 || $request->isCommand([['playlist'], ['play']]) 
 	     || $request->isCommand([['playlist'], ['stop']]) 
 	     || $request->isCommand([['playlist'], ['newsong']]) ){
 		 
@@ -272,6 +275,7 @@ sub commandCallback {
 # ----------------------------------------------------------------------------
 sub RequestPowerOn {
 	my $client = shift;
+	
 	my $cprefs = $prefs->client($client);
 	
 	my $Delay = $cprefs->get('delayOn');	 
@@ -298,12 +302,17 @@ sub RequestPowerOn {
 			Slim::Utils::Timers::killTimers( $client, \&ResetTransitionFlag); 
 		}
 		
-		# Start ON transition
-		$InTransition{$client} = 1;
-		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&ResetTransitionFlag); 
-		
-	    # Launch timer to power on after a delay		
-		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&TurnPowerOn); 
+		if( $Delay > 0 ){
+			# Start ON transition
+			$InTransition{$client} = 1;
+			Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&ResetTransitionFlag); 
+			
+			# Launch timer to power on after a delay		
+			Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&TurnPowerOn); 
+		}
+		else{
+			TurnPowerOn($client);
+		}
 	}
 
 }
@@ -312,7 +321,7 @@ sub RequestPowerOn {
 # ----------------------------------------------------------------------------
 sub RequestPowerOff {
 	my $client = shift;
-	my $Delay  = shift;
+
 	my $cprefs = $prefs->client($client);
 	
 	my $Delay = $cprefs->get('delayOff');
@@ -323,7 +332,7 @@ sub RequestPowerOff {
 	my $msg = "SBNetIO: Zones will be turned off in " . $Delay . " seconds.";
 	RunCommand( $client, ['display',$msg] );
 		
-	# Maybe we received a player off request recently - if so, stop  TurnOn
+	# Maybe we received a player on request recently - if so, stop  TurnOn
 	Slim::Utils::Timers::killTimers($client, \&TurnPowerOn); 
 
 	if( ($InTransition{$client} == 1) ){
@@ -339,12 +348,17 @@ sub RequestPowerOff {
 			Slim::Utils::Timers::killTimers( $client, \&ResetTransitionFlag); 
 		}
 		
-		# Start OFF transition
-		$InTransition{$client} = -1;
-		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&ResetTransitionFlag); 
+		if( $Delay > 0 ){
+			# Start OFF transition
+			$InTransition{$client} = -1;
+			Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&ResetTransitionFlag); 
 		
-		# Launch timer to power off after a delay		
-		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&TurnPowerOff); 
+			# Launch timer to power off after a delay		
+			Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&TurnPowerOff);
+		}
+		else{
+			TurnPowerOff($client);
+		}
 	}
 
 }
@@ -474,7 +488,25 @@ sub SetZoneSync{
 sub TurnPowerOn {
 	my $client = shift;
 
-	SetPowerState($client, 1)
+	my $Delay = 2;
+	if( $Delay > 0 ){
+	    $log->debug("*** SBNetIO: Pausing Playback \n");
+		#Slim::Player::Player::pause($client);
+		
+		my $controller = $client->controller();
+		my $TimeElapsed = $controller->playingSongElapsed();
+		
+		$log->debug("*** SBNetIO: Time = " . $TimeElapsed . "\n");
+		
+		my $currentVolume = $client->volume();
+		$OrgVolume{$client} = $currentVolume;
+		$log->debug("*** SBNetIO: Saving Volume : " . $currentVolume . "\n");
+		$client->volume(0);
+				
+		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&ResumePlayback); 
+	}
+	
+	SetPowerState($client, 1);
 }
 
 
@@ -482,7 +514,34 @@ sub TurnPowerOn {
 sub TurnPowerOff {
 	my $client = shift;
 	
-	SetPowerState($client, 0)
+	SetPowerState($client, 0);
+}
+
+
+# ----------------------------------------------------------------------------
+sub ResumePlayback {
+	my $client = shift;
+
+	$log->debug("*** SBNetIO: Continuing Playback \n");
+	
+	my $controller = $client->controller();
+	my $TimeElapsed = $controller->playingSongElapsed();
+	
+	my $Delay = 2;
+	
+	my $NewTime = 0;
+	if( $TimeElapsed > $Delay ){
+	   $NewTime = $TimeElapsed - $Delay;
+	}
+	
+	$controller->jumpToTime($NewTime);
+	
+	my $currentVolume = $OrgVolume{$client};
+	$log->debug("*** SBNetIO: Restoring Volume = " . $currentVolume . "\n");
+	$client->volume($currentVolume);
+		
+	#$log->debug("*** SBNetIO: Time = " . $TimeElapsed . "\n");
+	#Slim::Player::Player::resume($client);
 }
 
 
