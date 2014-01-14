@@ -151,21 +151,24 @@ sub handler {
 		if ($params->{'srvAddress'}) { #save the Server IP Address
 			my $srvAddress = $params->{'srvAddress'};
 			# get rid of leading spaces if any since one is always added.
-			$srvAddress =~ s/^\s+(.*)\s+/\1/;
-			#save the AVP address in the client prefs
+			$srvAddress =~ s/^(\s*)(.*)(\s*)$/$2/;
+			#save the server address in the client prefs
 			$prefs->client($client)->set('srvAddress', "$srvAddress"); 
 		}
-		if ($params->{'delayOn'} =~ /^-?\d/) { #save the delay on time
-			my $delayOn = $params->{'delayOn'};
-			# get rid of leading spaces if any since one is always added.
-			$delayOn =~ s/^\s+(.*)\s+/\1/;
+		
+		my $delayOn = $params->{'delayOn'};
+		if( $delayOn =~ /^(.*)(\d+)(.*)$/) { #save the delay on time
+			#$log->debug( "*** SBNetIO delayOn (1): " . $delayOn);
+			$delayOn =~ s/^(.*)(\d+)(.*)$/$2/;
+			#$log->debug( "*** SBNetIO delayOn (2): " . $delayOn);
+
 			#save the delay on time in the client prefs
 			$prefs->client($client)->set('delayOn', "$delayOn"); 
 		}
-		if ($params->{'delayOff'} =~ /^-?\d/) { #save the delay off time
-			my $delayOff = $params->{'delayOff'};
-			# get rid of leading spaces if any since one is always added.
-			$delayOff =~ s/^\s+(.*)\s+/\1/;
+		
+		my $delayOff = $params->{'delayOff'};
+		if( $delayOff =~ /^(.*)(\d+)(.*)$/) { #save the delay off time
+			$delayOff =~ s/^(.*)(\d+)(.*)$/$2/;
 			#save the delay off time in the client prefs
 			$prefs->client($client)->set('delayOff', "$delayOff"); 
 		}
