@@ -157,9 +157,9 @@ sub handler {
 		}
 		
 		my $delayOn = $params->{'delayOn'};
-		if( $delayOn =~ /^(.*)(\d+)(.*)$/) { #save the delay on time
+		if( $delayOn =~ /^(\s*)(\d+)(\s*)$/) { #save the delay on time
 			#$log->debug( "*** SBNetIO delayOn (1): " . $delayOn);
-			$delayOn =~ s/^(.*)(\d+)(.*)$/$2/;
+			$delayOn =~ s/^(\s*)(\d+)(\s*)$/$2/;
 			#$log->debug( "*** SBNetIO delayOn (2): " . $delayOn);
 
 			#save the delay on time in the client prefs
@@ -167,8 +167,8 @@ sub handler {
 		}
 		
 		my $delayOff = $params->{'delayOff'};
-		if( $delayOff =~ /^(.*)(\d+)(.*)$/) { #save the delay off time
-			$delayOff =~ s/^(.*)(\d+)(.*)$/$2/;
+		if( $delayOff =~ /^(\s*)(\d+)(\s*)$/) { #save the delay off time
+			$delayOff =~ s/^(\s*)(\d+)(\s*)$/$2/;
 			#save the delay off time in the client prefs
 			$prefs->client($client)->set('delayOff', "$delayOff"); 
 		}

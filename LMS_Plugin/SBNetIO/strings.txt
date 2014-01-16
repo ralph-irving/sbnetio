@@ -52,20 +52,20 @@ PLUGIN_SBNETIO_SRVADDRESS_DESC
 	DE	Geben Sie die Adresse des Home Automation Servers ein ([http://[user:pw@]]xxx.xxx.xxx.xxx:port). Wenn der Connection-String mit 'http://' beginnt, wird ein http-GET request ausgeführt. Achtung: Dieses Plugin funktioniert nur mit festen IP-Adressen.
 
 PLUGIN_SBNETIO_ONDELAY
-	EN	Turn on delay
-	DE	Einschaltverzoegerung
+	EN	Turn on playback pause
+	DE	Abspielpause beim Einschalten
 
 PLUGIN_SBNETIO_ONDELAY_DESC
-	EN	Enter the number of seconds you want to wait until the turn on command is sent when the Squeezebox is turned on.
-	DE	Geben Sie ein, wie viele Sekunden Sie nach dem Einschalten der Squeezebox warten wollen, bevor die Einschaltkommando gesendet wird.
+	EN	Enter the number of seconds you want to pause playback after the Squeezebox was turned on. Time until zones are fully operational, e.g. amps are fully on and un-muted.
+	DE	Geben Sie ein, wie viele Sekunden das Abspielen nach dem Einschalten der Squeezebox unterbrochen werden soll. Zeitspanne bis die Zonen (d.h. i.A. die Verstaerker) voll funktionsfähig sind.
 	
 PLUGIN_SBNETIO_OFFDELAY
-	EN	Turn off delay
-	DE	Ausschaltverzoegerung
+	EN	Zone turn off delay
+	DE	Zonen Ausschaltverzoegerung
 	
 PLUGIN_SBNETIO_OFFDELAY_DESC
-	EN	Enter the number of seconds you want to wait until the turn off command is sent when the Squeezebox is turned off before.
-	DE	Geben Sie die Anzahl der Sekunden ein, die Sie nach dem Ausschalten der Squeezebox warten wollen, bevor Ausschaltkommando gesendet wird.
+	EN	Enter the number of seconds you want to wait until the zone turn off commands are sent after the Squeezebox was turned off.
+	DE	Geben Sie die Anzahl der Sekunden ein, die Sie nach dem Ausschalten der Squeezebox warten wollen, bevor die Zonen-Ausschaltkommandos gesendet wird.
 	
 PLUGIN_SBNETIO_OFFMSG
 	EN	Turn off command
