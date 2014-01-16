@@ -83,7 +83,7 @@ my $gZone3ID = 4;
 my %PowerState;
 my %InTransition;
 
-my %OrgVolume;
+#my %OrgVolume;
 
 
 # ----------------------------------------------------------------------------
@@ -94,7 +94,8 @@ my $log = Slim::Utils::Log->addLogCategory({
 });
 
 # ----------------------------------------------------------------------------
-my $prefs = preferences('plugin.SBNetIO'); 	#name of preferences file: prefs\plugin\SBNetIO.pref
+my $prefs    = preferences('plugin.SBNetIO'); 	#name of preferences file: prefs\plugin\SBNetIO.pref
+my $srvprefs = preferences('server');
 
 # ----------------------------------------------------------------------------
 sub initPlugin {
@@ -132,7 +133,7 @@ sub newPlayerCheck {
 	my $client = $request->client();
 	
     if ( defined($client) ) {
-	    $log->debug( "*** SBNetIO: ".$client->name()." is: " . $client);
+	    $log->debug( "*** SBNetIO: ".$client->name()." is: " . $client->id() );
 
 		# Do nothing if client is not a Receiver or Squeezebox
 		if( !(($client->isa( "Slim::Player::Receiver")) || ($client->isa( "Slim::Player::Squeezebox2")))) {
@@ -249,6 +250,8 @@ sub commandCallback {
 	elsif ( $request->isCommand([['play']])
 	     || $request->isCommand([['pause']])
 		 || $request->isCommand([['playlist'], ['play']]) 
+		 || $request->isCommand([['playlist'], ['jump']]) 
+		 || $request->isCommand([['playlist'], ['index']]) 
 	     || $request->isCommand([['playlist'], ['stop']]) 
 	     || $request->isCommand([['playlist'], ['newsong']]) ){
 		 
@@ -278,7 +281,7 @@ sub RequestPowerOn {
 	
 	my $cprefs = $prefs->client($client);
 	
-	my $Delay = $cprefs->get('delayOn');	 
+	my $TurnOnDelay = 0;
 	
 	$log->debug("*** SBNetIO: Request Power ON \n");
 	$log->debug("*** SBNetIO: In transition = " . $InTransition{$client} . "\n");
@@ -302,13 +305,13 @@ sub RequestPowerOn {
 			Slim::Utils::Timers::killTimers( $client, \&ResetTransitionFlag); 
 		}
 		
-		if( $Delay > 0 ){
+		if( $TurnOnDelay > 0 ){
 			# Start ON transition
 			$InTransition{$client} = 1;
-			Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&ResetTransitionFlag); 
+			Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $TurnOnDelay), \&ResetTransitionFlag); 
 			
 			# Launch timer to power on after a delay		
-			Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&TurnPowerOn); 
+			Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $TurnOnDelay), \&TurnPowerOn); 
 		}
 		else{
 			TurnPowerOn($client);
@@ -402,6 +405,7 @@ sub SetPowerState{
 		}
 	}
 	
+	$log->debug("*** SBNetIO: Turn Power - Zones : " . $Zones . "\n");
 	if( $Zones > 0 ){
 		SetZonePower($client, $Zones, $iPower);
 	}
@@ -487,23 +491,23 @@ sub SetZoneSync{
 # ----------------------------------------------------------------------------
 sub TurnPowerOn {
 	my $client = shift;
+	
+	my $cprefs = $prefs->client($client);
+	my $PlaybackPausePeriod = $cprefs->get('delayOn');
 
-	my $Delay = 2;
-	if( $Delay > 0 ){
+	if( $PlaybackPausePeriod > 0 ){
 	    $log->debug("*** SBNetIO: Pausing Playback \n");
-		#Slim::Player::Player::pause($client);
-		
+
+		#Playback is not really paused; it is just muted and after the specified period of time retarded		
 		my $controller = $client->controller();
-		my $TimeElapsed = $controller->playingSongElapsed();
-		
+	    my $TimeElapsed = $controller->playingSongElapsed();
 		$log->debug("*** SBNetIO: Time = " . $TimeElapsed . "\n");
 		
-		my $currentVolume = $client->volume();
-		$OrgVolume{$client} = $currentVolume;
-		$log->debug("*** SBNetIO: Saving Volume : " . $currentVolume . "\n");
+		my $CurrentVolume = $client->volume();
+		$log->debug("*** SBNetIO: Saving Volume : " . $CurrentVolume . "\n");
 		$client->volume(0);
 				
-		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&ResumePlayback); 
+		Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $PlaybackPausePeriod), \&ResumePlayback, $PlaybackPausePeriod, $CurrentVolume); 
 	}
 	
 	SetPowerState($client, 1);
@@ -520,28 +524,42 @@ sub TurnPowerOff {
 
 # ----------------------------------------------------------------------------
 sub ResumePlayback {
-	my $client = shift;
+	my $client       = shift;
+	my $JumpBack     = shift;
+	my $TargetVolume = shift;
 
 	$log->debug("*** SBNetIO: Continuing Playback \n");
 	
 	my $controller = $client->controller();
 	my $TimeElapsed = $controller->playingSongElapsed();
-	
-	my $Delay = 2;
-	
+	$log->debug("*** SBNetIO: Time = " . $TimeElapsed . "\n");
+
 	my $NewTime = 0;
-	if( $TimeElapsed > $Delay ){
-	   $NewTime = $TimeElapsed - $Delay;
+	if( $TimeElapsed > $JumpBack ){
+	   $NewTime = $TimeElapsed - $JumpBack;
 	}
 	
+	$log->debug("*** SBNetIO: Jump to = " . $NewTime . "\n");
 	$controller->jumpToTime($NewTime);
 	
-	my $currentVolume = $OrgVolume{$client};
-	$log->debug("*** SBNetIO: Restoring Volume = " . $currentVolume . "\n");
-	$client->volume($currentVolume);
-		
-	#$log->debug("*** SBNetIO: Time = " . $TimeElapsed . "\n");
-	#Slim::Player::Player::resume($client);
+	$log->debug("*** SBNetIO: Restoring Volume = " . $TargetVolume . "\n");
+	$client->volume($TargetVolume);
+	
+	#if we're sync'd, get our buddies
+	if( $client->isSynced() ) {
+	    $log->debug("*** SBNetIO: Player is synced with ... \n");
+		my @buddies = $client->syncedWith();
+
+		for my $thisclient (@buddies) {
+			my $SyncVol = $srvprefs->client($thisclient)->get('syncVolume');
+		    $log->debug("         " . $thisclient->name() . " - Volume synced : " . $SyncVol . "\n");
+			if ( $SyncVol ) {
+			    $log->debug("*** SBNetIO: Restoring Volume of : " . $thisclient->name() . "\n");
+				$thisclient->volume($TargetVolume);
+			}
+		}
+	}
+
 }
 
 
