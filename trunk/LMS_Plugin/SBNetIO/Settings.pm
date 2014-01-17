@@ -113,10 +113,10 @@ sub handler {
 	}
 	
 	# set a few defaults for the first time
-	if ($prefs->client($client)->get('delayOn') == '') {
+	if ($prefs->client($client)->get('delayOn') eq '') {
 		$prefs->client($client)->set('delayOn', '0');
 	} 
-	if ($prefs->client($client)->get('delayOff') == '') {
+	if ($prefs->client($client)->get('delayOff') eq '') {
 		$prefs->client($client)->set('delayOff', '30');
 	}
 	if ($prefs->client($client)->get('Zone1Active') == '') {
