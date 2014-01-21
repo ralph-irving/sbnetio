@@ -57,6 +57,7 @@ use Slim::Player::Client;
 use Slim::Player::Source;
 use Slim::Player::Playlist;
 
+#use Scalar::Util qw(looks_like_number);
 
 use File::Spec::Functions qw(:ALL);
 use FindBin qw($Bin);
@@ -423,7 +424,6 @@ sub SetZonePower{
 	$log->debug("*** SBNetIO: SetZonePower: " . $iZone . " - " . $iPower . "\n");
 	
 	my $cprefs = $prefs->client($client);
-	my $srvAddress = $cprefs->get('srvAddress');
 	
 	if( ($iZone & $gZone1ID) == $gZone1ID ){
 		my $Cmd = '';
@@ -434,7 +434,7 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff1');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 1, Msg: " . $Cmd . "\n");
-		Plugins::SBNetIO::SBNetIOSendMsg::SendCmd($srvAddress, $Cmd);
+		SendCmd($client, $Cmd);
 	}
 	
 	if( ($iZone & $gZone2ID) == $gZone2ID ){
@@ -446,7 +446,7 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff2');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 2, Msg: " . $Cmd . "\n");
-		Plugins::SBNetIO::SBNetIOSendMsg::SendCmd($srvAddress, $Cmd);
+		SendCmd($client, $Cmd);
 	}
 	
 	if( ($iZone & $gZone3ID) == $gZone3ID ){
@@ -458,9 +458,80 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff3');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 3, Msg: " . $Cmd . "\n");
-		Plugins::SBNetIO::SBNetIOSendMsg::SendCmd($srvAddress, $Cmd);
+		SendCmd($client, $Cmd);
 	}
 
+}
+
+
+# ----------------------------------------------------------------------------
+sub SendCmd{
+	my $client = shift;
+	my $iCmd = shift;
+	
+	$log->debug("*** SBNetIO::SendCmd - Cmd : " . $iCmd . "\n");
+
+	my $cprefs = $prefs->client($client);
+	my $srvAddress = $cprefs->get('srvAddress');
+	
+	my $CleanedCmd = CleanCmdString($iCmd);
+	
+	$log->debug("*** SBNetIO::SendCmd - CleanedCmd : " . $CleanedCmd . "\n");
+		
+	SendCommands($client, $srvAddress, $CleanedCmd);
+}
+
+
+
+# ----------------------------------------------------------------------------
+sub SendCommands{
+	my $client = shift;
+	my $iSrvAddress = shift;
+	my $iCmds = shift;
+	
+	$log->debug("*** SBNetIO::SendCommands - Cmd : " . $iCmds . "\n");
+
+	if( length($iCmds) > 0 ){
+		my $ThisCmd = "";
+		my $RemainingCmds = "";
+		
+		my $Pos = index($iCmds, ";");
+		if( $Pos < 0 ){
+			$ThisCmd = $iCmds;
+		}
+		else{
+			$ThisCmd = substr($iCmds, 0, $Pos);
+			$RemainingCmds = substr($iCmds, $Pos + 1);
+		}
+		
+		$log->debug("*** SBNetIO::SendCmds - ThisCmd       : " . $ThisCmd . "\n");
+		$log->debug("*** SBNetIO::SendCmds - RemainingCmds : " . $RemainingCmds . "\n");
+		
+		if( $ThisCmd =~ /^(\s*)(\d+)(\s*)$/ ){
+			my $Delay = "10";
+			$Delay = int($ThisCmd);
+			
+			$log->debug("*** SBNetIO::SendCmds - ThisCmd is a numeric value.\n");
+			
+			if( length($RemainingCmds) > 0 ){
+				if( $Delay > 0 ){
+					$log->debug("*** SBNetIO::SendCmds - ThisCmd is a timer. Continue in : " . $Delay . "s \n");
+					Slim::Utils::Timers::setTimer($client, (Time::HiRes::time() + $Delay), \&SendCommands, $iSrvAddress, $RemainingCmds); 
+				}
+				else{
+				    $log->debug("*** SBNetIO::SendCmds - ThisCmd is a zero timer.\n");
+					SendCommands($client, $iSrvAddress, $RemainingCmds);
+				}
+			}
+		}
+		else{
+			Plugins::SBNetIO::SBNetIOSendMsg::SendCmd($iSrvAddress, $ThisCmd);	
+		
+			if( length($RemainingCmds) > 0 ){
+				SendCommands($client, $iSrvAddress, $RemainingCmds);
+			}
+		}
+	}
 }
 
 
@@ -496,7 +567,7 @@ sub TurnPowerOn {
 	my $PlaybackPausePeriod = $cprefs->get('delayOn');
 
 	if( $PlaybackPausePeriod > 0 ){
-	    $log->debug("*** SBNetIO: Pausing Playback \n");
+	    $log->debug("*** SBNetIO: Playback will be paused for " . $PlaybackPausePeriod . "s \n");
 
 		#Playback is not really paused; it is just muted and after the specified period of time retarded		
 		my $controller = $client->controller();
@@ -949,7 +1020,40 @@ sub RunCommand{
     if( $request->isStatusError() ) {
         $log->debug( sprintf( 'Command ERROR --> %s %s', $id, $argstr ));
     }
-}    
+}  
+
+
+
+# ----------------------------------------------------------------------------
+sub CleanCmdString
+{
+	my $iCmd = shift;
+	
+	my $oCleanedCmd = "";
+
+	my @CmdParts = split(";", $iCmd);
+	my $CmdCount = @CmdParts;
+
+	my $ii = 0;
+	for($ii = 0; $ii < $CmdCount; $ii++){
+		my $CmdPart = @CmdParts[$ii];
+	
+		$CmdPart =~ s/^\s+//;
+		$CmdPart =~ s/\s+$//;
+	
+		if( length($CmdPart) > 0 ){
+			if( length($oCleanedCmd) == 0 ){
+				$oCleanedCmd .= $CmdPart;
+			}
+			else{
+				$oCleanedCmd .= ";";
+				$oCleanedCmd .= $CmdPart;
+			}
+		}
+	}
+	
+	return $oCleanedCmd;
+}
 
 
 1;
