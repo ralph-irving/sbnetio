@@ -1,4 +1,6 @@
 0.1 		Rev.  91
-0.2 		Rev. 100
+0.2 		Rev. 100        http-Support
 0.2.2		Rev. 103		Better Debug Info to solve pref problem
 0.2.4       Rev. 104        Found reason of pref problem: inconsistent naming, fixed
+0.2.5       Rev. 108        turn on playback pause
+0.2.6       Rev. 109        multi cmds (semicolon separated list of cmds and timers)
