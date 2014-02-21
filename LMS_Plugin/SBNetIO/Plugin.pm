@@ -228,14 +228,42 @@ sub clearCallback {
 sub commandCallback {
 	my $request = shift;
 
-	my $client = $request->client();
+	my $RequestClient = $request->client();
+	
+	$log->debug( "*** SBNetIO: commandCallback from client " . $RequestClient->name() ."\n");
+	
+	my $client = $RequestClient;
+	
+	my $cprefs = $prefs->client($RequestClient);
+	my $pluginEnabled = $cprefs->get('pref_Enabled');
+	if ( !defined($pluginEnabled) ){
+		$log->debug( "*** SBNetIO: Client not configured; maybe a synced player interferes ... \n");
+		
+		#if we're sync'd, get our buddies
+		if( $RequestClient->isSynced() ) {
+			$log->debug("*** SBNetIO: Player is synced with ... \n");
+			my @buddies = $RequestClient->syncedWith();
+			for my $BuddyClient (@buddies) {
+				my $Buddycprefs = $prefs->client($BuddyClient);
+				my $BuddyEnabled = $Buddycprefs->get('pref_Enabled');
+				if( defined($BuddyEnabled) ){
+					$client = $BuddyClient;
+					last;
+				}
+			}
+		}
+		else{
+			$log->debug("*** SBNetIO: Not synced --> Exit ... \n");
+			return;
+		}
+	}
+	
 	# Do nothing if client is not defined
 	if(!defined( $client) || $pluginReady==0) {
 		$pluginReady=1;
 		return;
 	}
-	my $cprefs = $prefs->client($client);
-	
+		
 	$log->debug( "*** SBNetIO: commandCallback() Client : " . $client->name() . "\n");
 	$log->debug( "*** SBNetIO: commandCallback()    p0  : " . $request->{'_request'}[0] . "\n");
 	$log->debug( "*** SBNetIO: commandCallback()    p1  : " . $request->{'_request'}[1] . "\n");
@@ -251,6 +279,7 @@ sub commandCallback {
 	elsif ( $request->isCommand([['play']])
 	     || $request->isCommand([['pause']])
 		 || $request->isCommand([['playlist'], ['play']]) 
+		 || $request->isCommand([['playlist'], ['pause']]) 
 		 || $request->isCommand([['playlist'], ['jump']]) 
 		 || $request->isCommand([['playlist'], ['index']]) 
 	     || $request->isCommand([['playlist'], ['stop']]) 
@@ -280,19 +309,30 @@ sub commandCallback {
 sub RequestPowerOn {
 	my $client = shift;
 	
+	$log->debug( "*** SBNetIO: Power ON request from client " . $client->name() ."\n");
+	
 	my $cprefs = $prefs->client($client);
+	my $pluginEnabled = $cprefs->get('pref_Enabled');
+	if ( !defined($pluginEnabled) ){
+		$log->debug( "*** SBNetIO: Client not configured (maybe a synced player interferes) -> Exit.\n");
+		return;
+	}
 	
 	my $TurnOnDelay = 0;
 	
-	$log->debug("*** SBNetIO: Request Power ON \n");
 	$log->debug("*** SBNetIO: In transition = " . $InTransition{$client} . "\n");
+	
+	# If we are already in a transition to ON state ...
+	if( $InTransition{$client} == 1 ){
+		$log->debug("*** SBNetIO: Power On requested while already being in transition to On -> nothing to do. \n");
+	}
 	
 	# Maybe we received a player off request recently - if so, stop TurnOff
 	Slim::Utils::Timers::killTimers($client, \&TurnPowerOff); 
 
 	if( $InTransition{$client} == -1 ){
 		# If we are in transition to OFF state ($InTransition{$client} == -1)
-		# there is nothing left to do, since the PowerOn was stopped above
+		# there is nothing left to do, since the PowerOff was stopped above
 		$log->debug("*** SBNetIO: Power ON requested while being in transition to OFF -> Cmds cancel, nothing to do. \n");
 		
 		$InTransition{$client} = 0;
@@ -301,10 +341,6 @@ sub RequestPowerOn {
 		RunCommand( $client, ['display',$msg] );
 	}
 	else{
-		# If we are already in a transition to ON state, kill the old Transition timer
-		if( $InTransition{$client} == 1 ){
-			Slim::Utils::Timers::killTimers( $client, \&ResetTransitionFlag); 
-		}
 		
 		if( $TurnOnDelay > 0 ){
 			# Start ON transition
@@ -325,13 +361,24 @@ sub RequestPowerOn {
 # ----------------------------------------------------------------------------
 sub RequestPowerOff {
 	my $client = shift;
+	
+	$log->debug( "*** SBNetIO: Power OFF request from client " . $client->name() ."\n");
 
 	my $cprefs = $prefs->client($client);
 	
 	my $Delay = $cprefs->get('delayOff');
-	
-	$log->debug("*** SBNetIO: Request Power OFF \n");
+	if( !defined($Delay) ){
+		$log->debug( "*** SBNetIO: Client not configured (maybe a synced player interferes) -> Exit.\n");
+		return;
+	}
+
 	$log->debug("*** SBNetIO: In transition = " . $InTransition{$client} . "\n");
+	
+	# If we are already in a transition to OFF state ...
+	if( $InTransition{$client} == -1){
+		$log->debug("*** SBNetIO: Power Off requested while already being in transition to Off -> nothing to do. \n");
+		return;
+	}
 	
 	my $msg = "SBNetIO: Zones will be turned off in " . $Delay . " seconds.";
 	RunCommand( $client, ['display',$msg] );
@@ -341,17 +388,12 @@ sub RequestPowerOff {
 
 	if( ($InTransition{$client} == 1) ){
 		# If we are in transition to ON state ($InTransition{$client} == 1)
-		# there is nothing left to do, since the PowerOff was stopped above
+		# there is nothing left to do, since the PowerOn was stopped above
 		$log->debug("*** SBNetIO: Power Off requested while being in transition to ON -> Cmds cancel, nothing to do. \n");
 		
 		$InTransition{$client} = 0;
 	}
 	else{
-		# If we are already in a transition to OFF state, kill the old Transition timer
-		if( $InTransition{$client} == -1){
-			Slim::Utils::Timers::killTimers( $client, \&ResetTransitionFlag); 
-		}
-		
 		if( $Delay > 0 ){
 			# Start OFF transition
 			$InTransition{$client} = -1;
@@ -426,6 +468,12 @@ sub SetZonePower{
 	my $cprefs = $prefs->client($client);
 	
 	if( ($iZone & $gZone1ID) == $gZone1ID ){
+	    my $Connection = '';
+		$Connection = $cprefs->get('srvAddress1');
+		if( !defined($Connection) ){
+			$Connection = '';
+		}
+		
 		my $Cmd = '';
 		if( $iPower == 1 ){
 			$Cmd = $cprefs->get('msgOn1');
@@ -434,10 +482,16 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff1');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 1, Msg: " . $Cmd . "\n");
-		SendCmd($client, $Cmd);
+		SendCmd($client, $Connection, $Cmd);
 	}
 	
 	if( ($iZone & $gZone2ID) == $gZone2ID ){
+		my $Connection = '';
+		$Connection = $cprefs->get('srvAddress2');
+		if( !defined($Connection) ){
+			$Connection = '';
+		}
+		
 		my $Cmd = '';
 		if( $iPower == 1 ){
 			$Cmd = $cprefs->get('msgOn2');
@@ -446,10 +500,16 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff2');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 2, Msg: " . $Cmd . "\n");
-		SendCmd($client, $Cmd);
+		SendCmd($client, $Connection, $Cmd);
 	}
 	
 	if( ($iZone & $gZone3ID) == $gZone3ID ){
+		my $Connection = '';
+		$Connection = $cprefs->get('srvAddress3');
+		if( !defined($Connection) ){
+			$Connection = '';
+		}
+		
 		my $Cmd = '';
 		if( $iPower == 1 ){
 			$Cmd = $cprefs->get('msgOn3');
@@ -458,7 +518,7 @@ sub SetZonePower{
 			$Cmd = $cprefs->get('msgOff3');
 		}
 		$log->debug("*** SBNetIO: SetPower: Zone 3, Msg: " . $Cmd . "\n");
-		SendCmd($client, $Cmd);
+		SendCmd($client, $Connection, $Cmd);
 	}
 
 }
@@ -467,18 +527,25 @@ sub SetZonePower{
 # ----------------------------------------------------------------------------
 sub SendCmd{
 	my $client = shift;
+	my $iConnection = shift;
 	my $iCmd = shift;
 	
-	$log->debug("*** SBNetIO::SendCmd - Cmd : " . $iCmd . "\n");
+	$log->debug("*** SBNetIO::SendCmd - Cmd : " . $iCmd . " Connection: " . $iConnection ."\n");
 
 	my $cprefs = $prefs->client($client);
-	my $srvAddress = $cprefs->get('srvAddress');
+	
+	my $Connection = $cprefs->get('srvAddress');
+	
+	if( length($iConnection) > 0 ){
+	    $log->debug("*** SBNetIO::SendCmd - Zone specific connection will be used. \n");
+		$Connection = $iConnection;
+	}
 	
 	my $CleanedCmd = CleanCmdString($iCmd);
 	
 	$log->debug("*** SBNetIO::SendCmd - CleanedCmd : " . $CleanedCmd . "\n");
 		
-	SendCommands($client, $srvAddress, $CleanedCmd);
+	SendCommands($client, $Connection, $CleanedCmd);
 }
 
 
@@ -508,7 +575,7 @@ sub SendCommands{
 		$log->debug("*** SBNetIO::SendCmds - RemainingCmds : " . $RemainingCmds . "\n");
 		
 		if( $ThisCmd =~ /^(\s*)(\d+)(\s*)$/ ){
-			my $Delay = "10";
+			my $Delay = "1";
 			$Delay = int($ThisCmd);
 			
 			$log->debug("*** SBNetIO::SendCmds - ThisCmd is a numeric value.\n");

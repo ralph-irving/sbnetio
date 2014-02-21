@@ -16,7 +16,7 @@
 	
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_HEADER_GENERAL" %]  [% END %] 
 
-		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_SRVADDRESS" desc="PLUGIN_SBNETIO_SRVADDRESS_DESC" %]
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_SRVADDRESS_DEFAULT" desc="PLUGIN_SBNETIO_SRVADDRESS_DESC" %]
 			<input type="text" class="stdedit" name="srvAddress" id="srvAddress" value="[% prefs.srvAddress %]" size="80" />
 		[% END %]
 
@@ -38,6 +38,10 @@
 		
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_ACTIVE" desc="PLUGIN_SBNETIO_ZONE_ACTIVE_DESC" %] &nbsp;
 			<input name="Zone1Active" type="checkbox" [% IF prefs.Zone1Active %] checked ] [% END %] >
+		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_SRVADDRESS" desc="PLUGIN_SBNETIO_SRVADDRESS_ZONE_DESC" %]
+			<input type="text" class="stdedit" name="srvAddress1" id="srvAddress1" value="[% prefs.srvAddress1 %]" size="80" />
 		[% END %]
 	
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_NAME" desc="PLUGIN_SBNETIO_ZONE_NAME_DESC" %]
@@ -67,6 +71,10 @@
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_ACTIVE" desc="PLUGIN_SBNETIO_ZONE_ACTIVE_DESC" %] &nbsp;
 			<input name="Zone2Active" type="checkbox" [% IF prefs.Zone2Active %] checked ] [% END %] >
 		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_SRVADDRESS" desc="PLUGIN_SBNETIO_SRVADDRESS_ZONE_DESC" %]
+			<input type="text" class="stdedit" name="srvAddress2" id="srvAddress2" value="[% prefs.srvAddress2 %]" size="80" />
+		[% END %]
 
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_NAME" desc="PLUGIN_SBNETIO_ZONE_NAME_DESC" %]
 			<input type="text" class="stdedit" name="Zone2Name" id="Zone2Name" value="[% prefs.Zone2Name %]" size="20" />
@@ -94,6 +102,10 @@
 		
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_ACTIVE" desc="PLUGIN_SBNETIO_ZONE_ACTIVE_DESC" %] &nbsp;
 			<input name="Zone3Active" type="checkbox" [% IF prefs.Zone3Active %] checked ] [% END %] >
+		[% END %]
+		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_SRVADDRESS" desc="PLUGIN_SBNETIO_SRVADDRESS_ZONE_DESC" %]
+			<input type="text" class="stdedit" name="srvAddress3" id="srvAddress3" value="[% prefs.srvAddress3 %]" size="80" />
 		[% END %]
 		
 		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_ZONE_NAME" desc="PLUGIN_SBNETIO_ZONE_NAME_DESC" %]
