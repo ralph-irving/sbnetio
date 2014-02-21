@@ -179,6 +179,13 @@ sub handler {
 		} else {
 			$prefs->client($client)->set('Zone1Active', 0);
 		}
+		if ($params->{'srvAddress1'}) { #save the Server IP Address
+			my $srvAddress = $params->{'srvAddress1'};
+			# get rid of leading spaces if any since one is always added.
+			$srvAddress =~ s/^(\s*)(.*)(\s*)$/$2/;
+			#save the server address in the client prefs
+			$prefs->client($client)->set('srvAddress1', "$srvAddress"); 
+		}
 		if ($params->{'Zone1Name'}) { 
 			my $ZoneName = $params->{'Zone1Name'};
 			$prefs->client($client)->set('Zone1Name', "$ZoneName"); 
@@ -204,6 +211,13 @@ sub handler {
 		} else {
 			$prefs->client($client)->set('Zone2Active', 0);
 		}
+		if ($params->{'srvAddress2'}) { #save the Server IP Address
+			my $srvAddress = $params->{'srvAddress2'};
+			# get rid of leading spaces if any since one is always added.
+			$srvAddress =~ s/^(\s*)(.*)(\s*)$/$2/;
+			#save the server address in the client prefs
+			$prefs->client($client)->set('srvAddress2', "$srvAddress"); 
+		}
 		if ($params->{'Zone2Name'}) { 
 			my $ZoneName = $params->{'Zone2Name'};
 			$prefs->client($client)->set('Zone2Name', "$ZoneName"); 
@@ -228,6 +242,13 @@ sub handler {
 			$prefs->client($client)->set('Zone3Active', 1); 
 		} else {
 			$prefs->client($client)->set('Zone3Active', 0);
+		}
+		if ($params->{'srvAddress3'}) { #save the Server IP Address
+			my $srvAddress = $params->{'srvAddress3'};
+			# get rid of leading spaces if any since one is always added.
+			$srvAddress =~ s/^(\s*)(.*)(\s*)$/$2/;
+			#save the server address in the client prefs
+			$prefs->client($client)->set('srvAddress3', "$srvAddress"); 
 		}
 		if ($params->{'Zone3Name'}) { 
 			my $ZoneName = $params->{'Zone3Name'};
@@ -268,6 +289,7 @@ sub handler {
 	else{
 		$params->{'prefs'}->{'Zone1Active'} = 0;
 	}
+	$params->{'prefs'}->{'srvAddress1'} = $prefs->client($client)->get('srvAddress1'); 
 	if( $prefs->client($client)->get('Zone1Auto') == '1'){
 		$params->{'prefs'}->{'Zone1Auto'} = 1;
 	}
@@ -285,6 +307,7 @@ sub handler {
 	else{
 		$params->{'prefs'}->{'Zone2Active'} = 0;
 	}
+	$params->{'prefs'}->{'srvAddress2'} = $prefs->client($client)->get('srvAddress2'); 
 	if( $prefs->client($client)->get('Zone2Auto') == '1'){
 		$params->{'prefs'}->{'Zone2Auto'} = 1;
 	}	
@@ -302,6 +325,7 @@ sub handler {
 	else{
 		$params->{'prefs'}->{'Zone3Active'} = 0;
 	}
+	$params->{'prefs'}->{'srvAddress3'} = $prefs->client($client)->get('srvAddress3'); 
 	if( $prefs->client($client)->get('Zone3Auto') == '1'){
 		$params->{'prefs'}->{'Zone3Auto'} = 1;
 	}	
@@ -311,7 +335,6 @@ sub handler {
 	$params->{'prefs'}->{'Zone3Name'} = $prefs->client($client)->get('Zone3Name'); 
 	$params->{'prefs'}->{'msgOn3'} = $prefs->client($client)->get('msgOn3'); 
 	$params->{'prefs'}->{'msgOff3'} = $prefs->client($client)->get('msgOff3'); 
-	
 	
 	return $class->SUPER::handler($client, $params);
 }

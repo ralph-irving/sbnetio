@@ -43,14 +43,22 @@ PLUGIN_SBNETIO_HEADER_ZONE3
 	EN	Settings for Zone 3
 	DE	Einstellungen fuer Zone 3
 
+PLUGIN_SBNETIO_SRVADDRESS_DEFAULT
+	EN	Default Connection
+	DE	Default Connection
+	
 PLUGIN_SBNETIO_SRVADDRESS
 	EN	Connection
 	DE	Connection
 
 PLUGIN_SBNETIO_SRVADDRESS_DESC
-	EN	Enter the address of the home automation server ([http://[user:pw@]]xxx.xxx.xxx.xxx:port). If the connection string starts with 'http://', a http-GET request is issued. Note: This plugin will only work for fixed IP addresses.
-	DE	Geben Sie die Adresse des Home Automation Servers ein ([http://[user:pw@]]xxx.xxx.xxx.xxx:port). Wenn der Connection-String mit 'http://' beginnt, wird ein http-GET request ausgeführt. Achtung: Dieses Plugin funktioniert nur mit festen IP-Adressen.
+	EN	Enter the address of the default home automation server ("xxx.xxx.xxx.xxx:port" or "http://[user:pw@]xxx.xxx.xxx.xxx:port"). If the connection string starts with 'http://', a http-GET request is issued. Note: This plugin will only work for fixed IP addresses.
+	DE	Geben Sie die Adresse des (Default) Home Automation Servers ein ("xxx.xxx.xxx.xxx:port" or "http://[user:pw@]xxx.xxx.xxx.xxx:port"). Wenn der Connection-String mit 'http://' beginnt, wird ein http-GET request ausgeführt. Achtung: Dieses Plugin funktioniert nur mit festen IP-Adressen.
 
+PLUGIN_SBNETIO_SRVADDRESS_ZONE_DESC
+	EN	Enter the address of the home automation server for this zone. If empty, above entered default address will be used.
+	DE	Geben Sie die Adresse des Home Automation Servers dieser Zone ein. Wenn dieses Feld leer ist, wird die oben angegebene Deafult-Adresse verwendet.
+	
 PLUGIN_SBNETIO_ONDELAY
 	EN	Turn on playback pause
 	DE	Abspielpause beim Einschalten
