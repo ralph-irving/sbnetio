@@ -1,14 +1,14 @@
 <?xml version="1.0"?>
 <extensions>
 	<plugins>
-		<plugin name="SBNetIO" version="0.2.4" minTarget="7.7" maxTarget="*">
+		<plugin name="SBNetIO" version="0.3.1" minTarget="7.7" maxTarget="*">
 			<title lang="EN">SBNetIO</title>
 			<desc lang="EN">Plugin for integration of LMS with Home Automation Server</desc>
-			<url>http://www.specifica.de/public/sbnetio/download/V02/SBNetIO_02.zip</url>
+			<url>http://www.specifica.de/public/sbnetio/download/V03/SBNetIO_03.zip</url>
 			<link>http://code.google.com/p/sbnetio/</link>
 			<creator>Guenther Roll</creator>
 			<email>guenther.roll@gmail.com</email>
-			<sha>381b96b3c369d2dd3844002949b1f8c6a31ea503</sha>
+			<sha>5527c6a9151cb6e439c22dc49e55e5bfc8dcfc38</sha>
 		</plugin>
 	</plugins>
 </extensions>

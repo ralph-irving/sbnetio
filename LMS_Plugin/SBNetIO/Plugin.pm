@@ -263,6 +263,8 @@ sub commandCallback {
 		$pluginReady=1;
 		return;
 	}
+	
+	my $cprefs = $prefs->client($client);
 		
 	$log->debug( "*** SBNetIO: commandCallback() Client : " . $client->name() . "\n");
 	$log->debug( "*** SBNetIO: commandCallback()    p0  : " . $request->{'_request'}[0] . "\n");
@@ -285,12 +287,24 @@ sub commandCallback {
 	     || $request->isCommand([['playlist'], ['stop']]) 
 	     || $request->isCommand([['playlist'], ['newsong']]) ){
 		 
+	 	my $PowerOffOnPause = 1;
+		$PowerOffOnPause = $cprefs->get('PowerOffOnPause');
+		if ( !defined($PowerOffOnPause) ){
+			$PowerOffOnPause = 1;
+		}
+		$log->debug("*** SBNetIO: PowerOffOnPause: " . $PowerOffOnPause . "\n");
+		 
 		my $playmode    = Slim::Player::Source::playmode($client);
 		$log->debug( "PLAYMODE " . $playmode . "\n");
 		
 		if( ($playmode eq "pause") || ($playmode eq "stop") ){
 			if( ($PowerState{$client} == 1) || ($InTransition{$client} == 1) ){
-				RequestPowerOff($client);
+				if( $PowerOffOnPause == 1 ){
+					RequestPowerOff($client);
+				}
+				else{
+					$log->debug("No turn off on pause. \n");
+				}
 			}
 		} else {
 			if( ($PowerState{$client} == 0) || ($InTransition{$client} == -1) ){

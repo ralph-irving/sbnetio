@@ -90,6 +90,14 @@ PLUGIN_SBNETIO_ONMSG
 PLUGIN_SBNETIO_ONMSG_DESC
 	EN	The command to turn on a zone.
 	DE	Das Kommando zum Einschalten der Zone.
+	
+PLUGIN_SBNETIO_POWEROFF_ON_PAUSE
+	EN	Turn off on pause
+	DE	Bei Pause abschalten
+	
+PLUGIN_SBNETIO_POWEROFF_ON_PAUSE_DESC
+	EN	If enabled, zones will be shut down whenever playback is paused. If not checked, zones will only shut down when the player is switched off.
+	DE	Falls aktiviert, führt das Ende des Playbacks zum Abschalten der Zone. Wenn nicht aktiviert, führt nur das Ausschalten des Players zum Abschalten der Zone.
 
 PLUGIN_SBNETIO_ZONE_NAME
 	EN	Name of the Zone
