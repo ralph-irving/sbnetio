@@ -28,6 +28,10 @@
 			<input type="text" class="stdedit" name="delayOff" id="delayOff" value="[% prefs.delayOff %]" size="5" />
 		[% END %]
 		
+		[% WRAPPER settingGroup title="PLUGIN_SBNETIO_POWEROFF_ON_PAUSE" desc="PLUGIN_SBNETIO_POWEROFF_ON_PAUSE_DESC" %] &nbsp;
+			<input name="PowerOffOnPause" type="checkbox" [% IF prefs.PowerOffOnPause %] checked ] [% END %] >
+		[% END %]
+		
 	[% END %]
 
 	[% WRAPPER setting title=" " %][% END %]	

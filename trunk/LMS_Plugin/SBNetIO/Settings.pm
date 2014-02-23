@@ -113,6 +113,9 @@ sub handler {
 	}
 	
 	# set a few defaults for the first time
+	if ($prefs->client($client)->get('PowerOffOnPause') eq '') {
+		$prefs->client($client)->set('PowerOffOnPause', 1);
+	}
 	if ($prefs->client($client)->get('delayOn') eq '') {
 		$prefs->client($client)->set('delayOn', '0');
 	} 
@@ -171,6 +174,11 @@ sub handler {
 			$delayOff =~ s/^(\s*)(\d+)(\s*)$/$2/;
 			#save the delay off time in the client prefs
 			$prefs->client($client)->set('delayOff', "$delayOff"); 
+		}
+		if ($params->{'PowerOffOnPause'}){ 
+			$prefs->client($client)->set('PowerOffOnPause', 1); 
+		} else {
+			$prefs->client($client)->set('PowerOffOnPause', 0);
 		}
 		
 		# Zone 1 --------------------------------------------------------------
@@ -280,7 +288,13 @@ sub handler {
 	# this puts the text fields in the web page
 	$params->{'prefs'}->{'srvAddress'} = $prefs->client($client)->get('srvAddress'); 
 	$params->{'prefs'}->{'delayOn'} = $prefs->client($client)->get('delayOn'); 
-	$params->{'prefs'}->{'delayOff'} = $prefs->client($client)->get('delayOff'); 
+	$params->{'prefs'}->{'delayOff'} = $prefs->client($client)->get('delayOff');
+	if( $prefs->client($client)->get('PowerOffOnPause') == '1'){
+		$params->{'prefs'}->{'PowerOffOnPause'} = 1;
+	}
+	else{
+		$params->{'prefs'}->{'PowerOffOnPause'} = 0;
+	}
 	
 	#Zone 1
 	if( $prefs->client($client)->get('Zone1Active') == '1'){
