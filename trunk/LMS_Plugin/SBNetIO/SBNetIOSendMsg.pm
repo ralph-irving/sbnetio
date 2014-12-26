@@ -92,18 +92,28 @@ sub SocketSend{
 	
 	$log->debug("SocketSend - Addr: " . $Addr . ", Cmd: " . $Cmd . "\n");
 	
+	my $proto = 'tcp';
+	
+	my $udp = "udp:";
+	if( index($Addr, $udp) == 0 ) {
+		$proto = 'udp';
+	}
+	
 	my @parts = split(':', $Addr);
 	my $Anzahl = @parts;
-	if( $Anzahl == 2 ){
-		my $IPAddr = @parts[0];
-		my $Port   = @parts[1];
+	if( ($Anzahl == 2) || ($Anzahl == 3) ){
+		
+		my $IPAddr = @parts[$Anzahl - 2];
+		my $Port   = @parts[$Anzahl - 1];
+		
+		$log->debug("SocketSend - Proto: " . $proto . ", PeerAddr: " . $IPAddr . ", PeerPort: " . $Port . ", Cmd: " . $Cmd . "\n");
 		
 		my $request = $Cmd . "\n";
 		
 		my $sock = new IO::Socket::INET(
 		   PeerAddr => $IPAddr, 
 		   PeerPort => $Port, 
-		   Proto => 'tcp', ); 
+		   Proto => $proto, ); 
 		die "Could not create socket: $!\n" unless $sock;
 		
 		$sock->autoflush(1);
