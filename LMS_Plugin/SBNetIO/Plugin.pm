@@ -26,7 +26,10 @@
 #	----------------------------------------------------------------------
 #	History:
 #
-#	2013/07/26 v1.0	- Initial version
+#	2013/07/26 v0.1	- Initial version
+#              v0.2 - http support, pause playback, bug fixes
+#              v0.3 - support of several semi-colon separated cmds
+#   2014/12/26 v0.4 - udp support
 #	----------------------------------------------------------------------
 #
 #	This program is free software; you can redistribute it and/or modify
